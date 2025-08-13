@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VSCode
+.vscode/
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Streamlit
+.streamlit/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Excel/CSV temporales
+*.xlsx
+*.xls
+*.csv
+
+# Otros
+*.zip
+*.log
+
+# Entornos virtuales
+venv/
+.env/

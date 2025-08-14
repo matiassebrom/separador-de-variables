@@ -11,14 +11,10 @@ def stage_naming() -> bool:
     default = st.session_state.file_name.rsplit(".", 1)[0]
     base = st.text_input("Guardar como (base)", value=st.session_state.base_name or default)
     base_val = base or ""
-    ok = st.button("Confirmar nombre base", type="primary", disabled=(not base_val.strip()))
-    if ok:
+    sep_col = st.session_state.separate_by or "[columna]"
+    st.caption(f"Los archivos se guardarán como: <base> + ' - ' + '{sep_col}' + ' - ' + valor.xlsx")
+    if base_val.strip():
         st.session_state.base_name = base_val.strip()
-        st.session_state["_base_name_confirmed"] = True
-        st.success(f"Nombre base confirmado: {st.session_state.base_name}")
-        return True
-
-    if st.session_state.get("_base_name_confirmed", False):
         return True
 
     if st.session_state.base_name:

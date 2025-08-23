@@ -30,3 +30,4 @@
 ---
 
 **Nota:** El backend está en `backend/` y el código legacy en `backend/legacy/`.
+uvicorn backend.main:app --reload

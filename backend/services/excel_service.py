@@ -1,3 +1,6 @@
+import tempfile
+import zipfile
+
 import pandas as pd
 import io
 import time
@@ -77,4 +80,38 @@ def set_values_to_keep_by_header(file_id: str, header: str, values: list) -> lis
     file_store[file_id]["values_to_keep_by_header"][header] = values
     return values
 
+def generate_excels_by_value(file_id: str) -> str:
+    data = check_ready_for_download(file_id)
+    df = data["df"]
+    header = data["header_to_split"]
+    headers_to_keep = data["headers_to_keep"]
+    values_to_keep_by_header = data["values_to_keep_by_header"][header]
+    # Crear un ZIP temporal
+    original_filename = data.get("filename", "archivo")
+    base_name = original_filename.rsplit(".", 1)[0]
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_zip:
+        with zipfile.ZipFile(tmp_zip, 'w') as zipf:
+            for value_to_keep in values_to_keep_by_header:
+                filtered_df = df[df[header] == value_to_keep]
+                if filtered_df.empty:
+                    continue
+                filtered_df = filtered_df[headers_to_keep]
+                # Guardar Excel en memoria
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp_xlsx:
+                    filtered_df.to_excel(tmp_xlsx.name, index=False)
+                    arcname = f"{base_name} {value_to_keep}.xlsx"
+                    zipf.write(tmp_xlsx.name, arcname=arcname)
+        return tmp_zip.name
 
+def check_ready_for_download(file_id: str):
+    if file_id not in file_store:
+        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
+    data = file_store[file_id]
+    required = ["df", "header_to_split", "headers_to_keep", "values_to_keep_by_header"]
+    for key in required:
+        if key not in data or data[key] is None:
+            raise HTTPException(status_code=400, detail=f"Falta configurar: {key}")
+    header = data["header_to_split"]
+    if header not in data["values_to_keep_by_header"]:
+        raise HTTPException(status_code=400, detail=f"Faltan valores a mantener para '{header}'")
+    return data

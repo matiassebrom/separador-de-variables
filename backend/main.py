@@ -2,7 +2,8 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Body
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
-from backend.services.excel_service import save_uploaded_file, get_headers_by_id, get_unique_values_by_header, set_header_to_split as set_header_to_split_service, set_headers_to_keep as set_headers_to_keep_service
+from backend.services.excel_service import save_uploaded_file, get_headers_by_id, get_unique_values_by_header, set_header_to_split as set_header_to_split_service, set_headers_to_keep as set_headers_to_keep_service, set_values_to_keep_by_header as set_header_to_split_service_service
+
 
 # ------------------- MODELOS -------------------
 class UploadFileResponse(BaseModel):
@@ -18,6 +19,12 @@ class UniqueValuesResponse(BaseModel):
 
 class SetHeaderToSplitRequest(BaseModel):
     header: str
+
+
+# Modelo único para request y response
+class ValuesToKeepByHeader(BaseModel):
+    header: str
+    values: list
 
 # ------------------- APP Y ENDPOINTS -------------------
 app = FastAPI()
@@ -53,3 +60,8 @@ def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueVa
 def set_headers_to_keep(file_id: str, headers: HeadersResponse = Body(...)) -> HeadersResponse:
     set_headers_to_keep_service(file_id, headers.headers)
     return HeadersResponse(headers=headers.headers)
+
+@app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)
+def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> ValuesToKeepByHeader:
+    values = set_header_to_split_service_service(file_id, body.header, body.values)
+    return ValuesToKeepByHeader(header=body.header, values=values)

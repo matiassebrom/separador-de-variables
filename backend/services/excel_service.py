@@ -12,6 +12,7 @@ class FileData(TypedDict, total=False):
     filename: str
     header_to_split: Optional[str]
     headers_to_keep: Optional[list[str]]
+    values_to_keep_by_header: Optional[dict[str, list]]
 
 # Estado en memoria: id -> FileData
 file_store: Dict[str, FileData] = {}
@@ -53,6 +54,7 @@ def get_unique_values_by_header(file_id: str, header: str):
     unique_values = df[header].dropna().unique().tolist()
     return unique_values
 
+
 def set_headers_to_keep(file_id: str, headers: list[str]) -> list[str]:
     if file_id not in file_store:
         raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
@@ -62,5 +64,17 @@ def set_headers_to_keep(file_id: str, headers: list[str]) -> list[str]:
             raise HTTPException(status_code=400, detail=f"Header '{h}' no está en la lista de headers")
     file_store[file_id]["headers_to_keep"] = headers
     return headers
+
+def set_values_to_keep_by_header(file_id: str, header: str, values: list) -> list:
+    if file_id not in file_store:
+        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
+    all_headers = get_headers_by_id(file_id)
+    if header not in all_headers:
+        raise HTTPException(status_code=400, detail=f"Header '{header}' no está en la lista de headers")
+    # Inicializar el dict si no existe
+    if "values_to_keep_by_header" not in file_store[file_id] or file_store[file_id]["values_to_keep_by_header"] is None:
+        file_store[file_id]["values_to_keep_by_header"] = {}
+    file_store[file_id]["values_to_keep_by_header"][header] = values
+    return values
 
 

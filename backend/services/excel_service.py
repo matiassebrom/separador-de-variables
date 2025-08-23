@@ -36,4 +36,13 @@ def get_headers_by_id(file_id: str):
     df = file_store[file_id]["df"]
     return list(df.columns)
 
+def get_unique_values_by_header(file_id: str, header: str):
+    if file_id not in file_store:
+        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
+    df = file_store[file_id]["df"]
+    if header not in df.columns:
+        raise HTTPException(status_code=404, detail=f"Header '{header}' no encontrado en el archivo")
+    unique_values = df[header].dropna().unique().tolist()
+    return unique_values
+
 

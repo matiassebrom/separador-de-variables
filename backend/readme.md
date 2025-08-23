@@ -64,3 +64,7 @@
 ---
 
 _Esta aplicación está diseñada para profesionales que trabajan con grandes volúmenes de datos y necesitan herramientas eficientes para su segmentación y distribución._
+
+& "D:\proyecto Python\separor de archivos\venv\Scripts\Activate.ps1"
+cd backend
+uvicorn main:app --reload

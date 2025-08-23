@@ -1,8 +1,9 @@
+from fastapi.responses import FileResponse
 from fastapi import FastAPI, UploadFile, File, HTTPException, Body
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
-from backend.services.excel_service import save_uploaded_file, get_headers_by_id, get_unique_values_by_header, set_header_to_split as set_header_to_split_service, set_headers_to_keep as set_headers_to_keep_service, set_values_to_keep_by_header as set_header_to_split_service_service
+from backend.services.excel_service import save_uploaded_file, get_headers_by_id, get_unique_values_by_header, set_header_to_split as set_header_to_split_service, set_headers_to_keep as set_headers_to_keep_service, set_values_to_keep_by_header as set_header_to_split_service_service, generate_excels_by_value
 
 
 # ------------------- MODELOS -------------------
@@ -65,3 +66,9 @@ def set_headers_to_keep(file_id: str, headers: HeadersResponse = Body(...)) -> H
 def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> ValuesToKeepByHeader:
     values = set_header_to_split_service_service(file_id, body.header, body.values)
     return ValuesToKeepByHeader(header=body.header, values=values)
+
+# Descargar archivos generados según la configuración guardada
+@app.get("/download_files/{file_id}")
+def download_files(file_id: str):
+    zip_path = generate_excels_by_value(file_id)
+    return FileResponse(zip_path, filename=f"archivos_{file_id}.zip", media_type="application/zip")

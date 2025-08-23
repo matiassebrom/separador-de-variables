@@ -1,5 +1,6 @@
+import os
 from fastapi.responses import FileResponse
-from fastapi import FastAPI, UploadFile, File, HTTPException, Body
+from fastapi import BackgroundTasks, FastAPI, UploadFile, File, HTTPException, Body
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
@@ -69,6 +70,19 @@ def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> Va
 
 # Descargar archivos generados según la configuración guardada
 @app.get("/download_files/{file_id}")
-def download_files(file_id: str):
+def download_files(file_id: str, background_tasks: BackgroundTasks):
     zip_path = generate_excels_by_value(file_id)
-    return FileResponse(zip_path, filename=f"archivos_{file_id}.zip", media_type="application/zip")
+
+    def cleanup():
+        try:
+            if os.path.exists(zip_path):
+                os.unlink(zip_path)
+        except Exception as e:
+            print(f"Error cleaning up {zip_path}: {e}")
+
+    background_tasks.add_task(cleanup)
+    
+    return FileResponse(zip_path, 
+        filename=f"archivos_{file_id}.zip", 
+        media_type="application/zip"
+    ) 

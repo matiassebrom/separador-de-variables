@@ -1,2 +1,5 @@
 fastapi>=0.110
 uvicorn[standard]>=0.29
+pandas
+openpyxl
+python-multipart

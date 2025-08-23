@@ -1,11 +1,10 @@
 import os
-import pytest
 from fastapi.testclient import TestClient
 from backend.main import app
 
 client = TestClient(app)
 
-def test_get_headers():
+def test_set_header_to_split():
     # Usar el archivo Excel fijo para los tests
     test_file_path = os.path.join(os.path.dirname(__file__), "excel para test.xlsx")
     with open(test_file_path, "rb") as f:
@@ -16,14 +15,9 @@ def test_get_headers():
     assert upload_response.status_code == 200
     file_id = upload_response.json()["file_id"]
 
-    # Obtener los headers usando el file_id
-    headers_response = client.get(f"/get_headers/{file_id}")
-    assert headers_response.status_code == 200
-    data = headers_response.json()
-    assert "headers" in data
-    # Verifica los headers esperados según el archivo de test
-    expected_headers = [
-        "StartDate", "RecordedDate", "ResponseId", "ORIGEN", "Q_TerminateFlag", "ETAPA", "ID",
-        "TIPO", "EDAD", "EDAD_COD", "FILTRO", "CUOTAFULL", "F11-EMPRESARIAL", "suma_eval"
-    ]
-    assert data["headers"] == expected_headers
+    # Probar set_header_to_split
+    response = client.post(f"/set_header_to_split/{file_id}", json={"header": "ORIGEN"})
+    assert response.status_code == 200
+    data = response.json()
+    assert "unique_values_in_header_to_split" in data
+    assert set(data["unique_values_in_header_to_split"]) == {"ORIGEN", "GURUS", "OPI", "TAP"}

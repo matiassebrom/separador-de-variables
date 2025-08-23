@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from main import app
+from backend.main import app
 
 def test_read_root():
     client = TestClient(app)

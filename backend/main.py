@@ -4,7 +4,7 @@ from fastapi import BackgroundTasks, FastAPI, UploadFile, File, HTTPException, B
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
-from backend.services.excel_service import save_uploaded_file, get_headers_by_id, get_unique_values_by_header, set_header_to_split as set_header_to_split_service, set_headers_to_keep as set_headers_to_keep_service, set_values_to_keep_by_header as set_header_to_split_service_service, generate_excels_by_value
+from services.excel_service import save_uploaded_file, get_headers_by_id, get_unique_values_by_header, set_header_to_split as set_header_to_split_service, set_headers_to_keep as set_headers_to_keep_service, set_values_to_keep_by_header as set_header_to_split_service_service, generate_excels_by_value
 
 
 # ------------------- MODELOS -------------------

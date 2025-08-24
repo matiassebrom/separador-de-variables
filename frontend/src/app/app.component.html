@@ -1,263 +1,221 @@
 <!-- Split & Filter Excel App -->
 <div class="app-container">
-	<header class="app-header">
-		<h1>🗂️ Split & Filter Excel</h1>
-		<p>Flujo por etapas para dividir y filtrar archivos Excel</p>
-	</header>
+	<mat-card class="header-card">
+		<mat-card-header>
+			<mat-card-title>🗂️ Split & Filter Excel</mat-card-title>
+			<mat-card-subtitle>Flujo por etapas para dividir y filtrar archivos Excel</mat-card-subtitle>
+		</mat-card-header>
+	</mat-card>
 
-	<!-- Sidebar con progreso -->
-	<div class="sidebar">
-		<h3>Progreso</h3>
-		<div class="progress-item">
-			<span class="progress-icon">✅</span>
-			<span>1) Subir archivo</span>
-		</div>
-		<div class="progress-item">
-			<span class="progress-icon">➡️</span>
-			<span>2) Obtener cabeceras y elegir 'Separar por'</span>
-		</div>
-		<div class="progress-item">
-			<span class="progress-icon">⏳</span>
-			<span>3) Configurar filtros (opcional)</span>
-		</div>
-		<div class="progress-item">
-			<span class="progress-icon">⏳</span>
-			<span>4) Elegir 'Datos a guardar'</span>
-		</div>
-		<div class="progress-item">
-			<span class="progress-icon">⏳</span>
-			<span>5) Nombre base</span>
-		</div>
-		<div class="progress-item">
-			<span class="progress-icon">⏳</span>
-			<span>6) Generar archivos</span>
-		</div>
-	</div>
+	<mat-accordion class="steps-accordion">
+		<!-- ==================== PASO 1: SUBIR ARCHIVO ==================== -->
+		<mat-expansion-panel 
+			[expanded]="isStepCurrent(1)" 
+			[disabled]="!canAccessStep(1)">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					<mat-icon>{{ isStepCompleted(1) ? 'check_circle' : (isStepCurrent(1) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					&nbsp; 1) Subir archivo
+				</mat-panel-title>
+				<mat-panel-description *ngIf="fileUploaded">
+					excel para test.xlsx - ✅ Cargado
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<div class="step-content">
+				<mat-card class="upload-card" *ngIf="!fileUploaded">
+					<mat-card-content>
+						<div class="upload-area">
+							<mat-icon class="upload-icon">cloud_upload</mat-icon>
+							<p>Arrastra tu archivo Excel aquí o selecciona uno</p>
+							<button mat-raised-button color="primary" (click)="onFileUpload()">
+								Seleccionar archivo
+							</button>
+						</div>
+					</mat-card-content>
+				</mat-card>
+				<mat-card *ngIf="fileUploaded">
+					<mat-card-content>
+						<p><strong>Archivo:</strong> excel para test.xlsx</p>
+						<p><strong>Estado:</strong> ✅ Cargado exitosamente</p>
+						<p><strong>Cabeceras detectadas:</strong> {{ headers.length }}</p>
+					</mat-card-content>
+				</mat-card>
+			</div>
+		</mat-expansion-panel>
 
-	<!-- Main content -->
-	<div class="main-content">
-		<!-- ==================== ETAPA 1: SUBIR ARCHIVO ==================== -->
-		<section class="stage-section">
-			<h2>1) Subir archivo</h2>
-			<div class="upload-area">
-				<div class="upload-box">
-					<svg
-						class="upload-icon"
-						viewBox="0 0 24 24"
-						width="48"
-						height="48">
-						<path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z" />
-					</svg>
-					<p>Arrastra tu archivo Excel aquí o haz clic para seleccionar</p>
-					<button class="btn-secondary">Seleccionar archivo</button>
-				</div>
-				<div class="file-info">
-					<p><strong>Archivo:</strong> excel para test.xlsx</p>
-					<p><strong>Estado:</strong> ✅ Cargado exitosamente</p>
+		<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
+		<mat-expansion-panel 
+			[expanded]="isStepCurrent(2)" 
+			[disabled]="!canAccessStep(2)">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					<mat-icon>{{ isStepCompleted(2) ? 'check_circle' : (isStepCurrent(2) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					&nbsp; 2) Elegir 'Separar por'
+				</mat-panel-title>
+				<mat-panel-description *ngIf="isStepCompleted(2)">
+					Separar por: {{ selectedSeparateBy }}
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<div class="step-content">
+				<mat-form-field appearance="outline" class="full-width">
+					<mat-label>Separar por (columna)</mat-label>
+						<mat-select [(ngModel)]="selectedSeparateBy">
+						<mat-option *ngFor="let header of headers" [value]="header">
+							{{ header }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<div class="step-actions">
+					<button mat-raised-button color="primary" (click)="nextStep()">
+						Continuar
+					</button>
 				</div>
 			</div>
-		</section>
+		</mat-expansion-panel>
 
-		<!-- ==================== ETAPA 2: OBTENER CABECERAS Y ELEGIR 'SEPARAR POR' ==================== -->
-		<section class="stage-section">
-			<h2>2) Obtener cabeceras y elegir 'Separar por'</h2>
-			<div class="headers-info">
-				<p>✅ Cabeceras detectadas: 14</p>
-				<div class="form-group">
-					<label for="separateBy">Separar por (columna):</label>
-					<select
-						id="separateBy"
-						class="form-select">
-						<option>StartDate</option>
-						<option>RecordedDate</option>
-						<option>ResponseId</option>
-						<option selected>ORIGEN</option>
-						<option>Q_TerminateFlag</option>
-						<option>ETAPA</option>
-						<option>ID</option>
-						<option>TIPO</option>
-						<option>EDAD</option>
-						<option>EDAD_COD</option>
-						<option>FILTRO</option>
-						<option>CUOTAFULL</option>
-						<option>F11-EMPRESARIAL</option>
-						<option>suma_eval</option>
-					</select>
-				</div>
-			</div>
-		</section>
-
-		<!-- ==================== ETAPA 3: CONFIGURAR FILTROS (OPCIONAL) ==================== -->
-		<section class="stage-section">
-			<h2>3) Configurar filtros (opcional)</h2>
-			<p>
-				Podés agregar uno o más filtros. Si no querés filtrar, simplemente Continuar en la siguiente pantalla.
-			</p>
-
-			<div class="filter-section">
-				<div class="form-group">
-					<label for="filterColumn">Columna a filtrar:</label>
-					<select
-						id="filterColumn"
-						class="form-select">
-						<option>(ninguna)</option>
-						<option>StartDate</option>
-						<option>RecordedDate</option>
-						<option>ResponseId</option>
-						<option>ORIGEN</option>
-						<option selected>ETAPA</option>
-						<option>ID</option>
-						<option>TIPO</option>
-						<option>EDAD</option>
-						<option>EDAD_COD</option>
-						<option>FILTRO</option>
-						<option>CUOTAFULL</option>
-						<option>F11-EMPRESARIAL</option>
-						<option>suma_eval</option>
-					</select>
-				</div>
-
-				<div class="form-group">
-					<label>Valores permitidos (ETAPA):</label>
+		<!-- ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ==================== -->
+		<mat-expansion-panel 
+			[expanded]="isStepCurrent(3)" 
+			[disabled]="!canAccessStep(3)">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					<mat-icon>{{ isStepCompleted(3) ? 'check_circle' : (isStepCurrent(3) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					&nbsp; 3) Configurar filtros (opcional)
+				</mat-panel-title>
+				<mat-panel-description *ngIf="selectedFilters.length > 0">
+					ETAPA: {{ selectedFilters.join(', ') }}
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<div class="step-content">
+				<p>Podés agregar filtros para incluir/excluir datos. Es opcional.</p>
+				<mat-form-field appearance="outline" class="full-width">
+					<mat-label>Columna a filtrar</mat-label>
+					<mat-select value="ETAPA">
+						<mat-option value="">( ninguna )</mat-option>
+						<mat-option *ngFor="let header of headers" [value]="header">
+							{{ header }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<div class="filter-values">
+					<p><strong>Valores permitidos (ETAPA):</strong></p>
 					<div class="checkbox-group">
-						<label class="checkbox-item">
-							<input
-								type="checkbox"
-								checked />
-							Activos
-						</label>
-						<label class="checkbox-item">
-							<input
-								type="checkbox"
-								checked />
-							Inactivos
-						</label>
-						<label class="checkbox-item"> <input type="checkbox" /> Pendientes </label>
+						<mat-checkbox 
+							*ngFor="let value of etapaValues" 
+							[(ngModel)]="selectedFiltersMap[value]"
+							(ngModelChange)="onFilterCheckboxModelChange(value, $event)">
+							{{ value }}
+						</mat-checkbox>
 					</div>
 				</div>
-
-				<div class="current-filters">
-					<h4>Filtros actuales:</h4>
-					<div class="filter-tag">
-						<span>ETAPA: Activos, Inactivos</span>
-						<button class="remove-filter">×</button>
-					</div>
+				<div class="current-filters" *ngIf="selectedFilters.length > 0">
+					<p><strong>Filtros actuales:</strong></p>
+					<mat-chip-listbox>
+						<mat-chip>ETAPA: {{ selectedFilters.join(', ') }}</mat-chip>
+					</mat-chip-listbox>
 				</div>
-
-				<button class="btn-secondary">Limpiar todos los filtros</button>
-			</div>
-		</section>
-
-		<!-- ==================== ETAPA 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
-		<section class="stage-section">
-			<h2>4) Elegir 'Datos a guardar'</h2>
-			<div class="form-group">
-				<label>Datos a guardar (columnas):</label>
-				<div class="checkbox-group columns-grid">
-					<label class="checkbox-item"> <input type="checkbox" /> StartDate </label>
-					<label class="checkbox-item"> <input type="checkbox" /> RecordedDate </label>
-					<label class="checkbox-item"> <input type="checkbox" /> ResponseId </label>
-					<label class="checkbox-item">
-						<input
-							type="checkbox"
-							checked />
-						ORIGEN
-					</label>
-					<label class="checkbox-item"> <input type="checkbox" /> Q_TerminateFlag </label>
-					<label class="checkbox-item">
-						<input
-							type="checkbox"
-							checked />
-						ETAPA
-					</label>
-					<label class="checkbox-item">
-						<input
-							type="checkbox"
-							checked />
-						ID
-					</label>
-					<label class="checkbox-item">
-						<input
-							type="checkbox"
-							checked />
-						TIPO
-					</label>
-					<label class="checkbox-item"> <input type="checkbox" /> EDAD </label>
-					<label class="checkbox-item"> <input type="checkbox" /> EDAD_COD </label>
-					<label class="checkbox-item"> <input type="checkbox" /> FILTRO </label>
-					<label class="checkbox-item"> <input type="checkbox" /> CUOTAFULL </label>
-					<label class="checkbox-item"> <input type="checkbox" /> F11-EMPRESARIAL </label>
-					<label class="checkbox-item"> <input type="checkbox" /> suma_eval </label>
+				<div class="step-actions">
+					<button mat-button>Limpiar filtros</button>
+					<button mat-raised-button color="primary" (click)="nextStep()">
+						Continuar
+					</button>
 				</div>
 			</div>
-		</section>
+		</mat-expansion-panel>
 
-		<!-- ==================== ETAPA 5: NOMBRE BASE ==================== -->
-		<section class="stage-section">
-			<h2>5) Nombre base</h2>
-			<div class="form-group">
-				<label for="baseName">Guardar como (base):</label>
-				<input
-					type="text"
-					id="baseName"
-					class="form-input"
-					value="datos_separados"
-					placeholder="Ingresa el nombre base para los archivos" />
-				<small>Los archivos se nombrarán como: [base] - [columna] - [valor].xlsx</small>
-			</div>
-		</section>
-
-		<!-- ==================== ETAPA 6: GENERAR ARCHIVOS ==================== -->
-		<section class="stage-section">
-			<h2>6) Generar archivos</h2>
-
-			<div class="generation-summary">
-				<div class="summary-item"><strong>Separar por:</strong> ORIGEN</div>
-				<div class="summary-item">
-					<strong>Filtros:</strong>
-					<div class="filter-details">
-						<strong>ETAPA</strong>
-						<div>Incluidos: Activos, Inactivos</div>
-						<div>Excluidos: Pendientes</div>
-					</div>
+		<!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
+		<mat-expansion-panel 
+			[expanded]="isStepCurrent(4)" 
+			[disabled]="!canAccessStep(4)">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					<mat-icon>{{ isStepCompleted(4) ? 'check_circle' : (isStepCurrent(4) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					&nbsp; 4) Elegir 'Datos a guardar'
+				</mat-panel-title>
+				<mat-panel-description *ngIf="selectedColumns.length > 0">
+					{{ selectedColumns.length }} columnas seleccionadas
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<div class="step-content">
+				<p><strong>Selecciona las columnas que quieres incluir en los archivos generados:</strong></p>
+				<div class="columns-grid">
+					<mat-checkbox 
+						*ngFor="let header of headers" 
+						[(ngModel)]="selectedColumnsMap[header]"
+						(ngModelChange)="onColumnCheckboxModelChange(header, $event)">
+						{{ header }}
+					</mat-checkbox>
 				</div>
-				<div class="summary-item"><strong>Columnas a guardar:</strong> ORIGEN, ETAPA, ID, TIPO</div>
-				<div class="summary-item"><strong>Base de nombre:</strong> datos_separados</div>
-			</div>
-
-			<div class="files-preview">
-				<p><strong>ℹ️ Se generarán 3 archivos:</strong></p>
-				<p class="caption">(Seleccione 🚫 si desea excluir alguno)</p>
-
-				<div class="file-list">
-					<div class="file-item">
-						<button class="exclude-btn">✅</button>
-						<span>datos_separados - ORIGEN - WEB.xlsx</span>
-					</div>
-					<div class="file-item">
-						<button class="exclude-btn">✅</button>
-						<span>datos_separados - ORIGEN - MOBILE.xlsx</span>
-					</div>
-					<div class="file-item excluded">
-						<button class="exclude-btn">🚫</button>
-						<span class="excluded-text">datos_separados - ORIGEN - EMAIL.xlsx</span>
-					</div>
+				<div class="step-actions">
+					<button mat-raised-button color="primary" (click)="nextStep()">
+						Continuar
+					</button>
 				</div>
 			</div>
+		</mat-expansion-panel>
 
-			<div class="generation-actions">
-				<button class="btn-primary">Generar y descargar</button>
+		<!-- ==================== PASO 5: NOMBRE BASE Y DESCARGAR ==================== -->
+		<mat-expansion-panel 
+			[expanded]="isStepCurrent(5)" 
+			[disabled]="!canAccessStep(5)">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					<mat-icon>{{ isStepCompleted(5) ? 'check_circle' : (isStepCurrent(5) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					&nbsp; 5) Nombre base y descargar
+				</mat-panel-title>
+				<mat-panel-description *ngIf="baseName">
+					{{ baseName }}
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<div class="step-content">
+				<!-- Nombre base -->
+				<mat-form-field appearance="outline" class="full-width">
+					<mat-label>Nombre base para los archivos</mat-label>
+						<input matInput [(ngModel)]="baseName" placeholder="datos_separados" />
+					<mat-hint>Los archivos se nombrarán como: [base] - [columna] - [valor].xlsx</mat-hint>
+				</mat-form-field>
+				<!-- Resumen -->
+				<mat-card class="summary-card">
+					<mat-card-header>
+						<mat-card-title>📋 Resumen de configuración</mat-card-title>
+					</mat-card-header>
+					<mat-card-content>
+						<p><strong>Separar por:</strong> {{ selectedSeparateBy }}</p>
+						<p><strong>Filtros:</strong> 
+							<span *ngIf="selectedFilters.length > 0">ETAPA: {{ selectedFilters.join(', ') }}</span>
+							<span *ngIf="selectedFilters.length === 0">Sin filtros</span>
+						</p>
+						<p><strong>Columnas:</strong> {{ selectedColumns.join(', ') }}</p>
+						<p><strong>Nombre base:</strong> {{ baseName }}</p>
+					</mat-card-content>
+				</mat-card>
+				<!-- Preview de archivos -->
+				<div class="files-preview">
+						<h3>📁 Se generarán {{ includedPreviewFiles.length }} archivos:</h3>
+					<p class="hint">Haz clic en ✅ para excluir archivos que no quieras descargar</p>
+					<div class="file-list">
+						<mat-card 
+							*ngFor="let file of previewFiles; let i = index" 
+							class="file-item"
+							[class.excluded]="file.excluded">
+							<mat-card-content>
+								<button 
+									mat-icon-button 
+									(click)="toggleFileExclusion(i)"
+									[color]="file.excluded ? 'warn' : 'primary'">
+									<mat-icon>{{ file.excluded ? 'cancel' : 'check_circle' }}</mat-icon>
+								</button>
+								<span [class.excluded-text]="file.excluded">{{ file.name }}</span>
+							</mat-card-content>
+						</mat-card>
+					</div>
+				</div>
+				<!-- Acción final -->
+				<div class="step-actions final-action">
+					<button mat-raised-button color="accent" size="large">
+						<mat-icon>download</mat-icon>
+						&nbsp; Generar y descargar archivos
+					</button>
+				</div>
 			</div>
-		</section>
-
-		<!-- Botón para continuar -->
-		<div class="navigation-controls">
-			<button class="btn-primary continue-btn">Continuar ➡️</button>
-		</div>
-	</div>
-</div>
-
-<div style="margin: 2rem 0; text-align: center;">
-	<button mat-raised-button color="primary">Botón Angular Material</button>
-</div>
-<router-outlet></router-outlet>
+		</mat-expansion-panel>

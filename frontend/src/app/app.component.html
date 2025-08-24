@@ -9,48 +9,14 @@
 
 	<mat-accordion class="steps-accordion">
 		<!-- ==================== PASO 1: SUBIR ARCHIVO ==================== -->
-		<mat-expansion-panel
-			[expanded]="isStepCurrent(1)"
-			[disabled]="!canAccessStep(1)">
-			<mat-expansion-panel-header>
-				<mat-panel-title>
-					<mat-icon>{{
-						isStepCompleted(1)
-							? 'check_circle'
-							: isStepCurrent(1)
-							? 'radio_button_checked'
-							: 'radio_button_unchecked'
-					}}</mat-icon>
-					&nbsp; 1) Subir archivo
-				</mat-panel-title>
-				<mat-panel-description *ngIf="fileUploaded"> excel para test.xlsx - ✅ Cargado </mat-panel-description>
-			</mat-expansion-panel-header>
-			<div class="step-content">
-				<mat-card
-					class="upload-card"
-					*ngIf="!fileUploaded">
-					<mat-card-content>
-						<div class="upload-area">
-							<mat-icon class="upload-icon">cloud_upload</mat-icon>
-							<p>Arrastra tu archivo Excel aquí o selecciona uno</p>
-							<button
-								mat-raised-button
-								color="primary"
-								(click)="onFileUpload()">
-								Seleccionar archivo
-							</button>
-						</div>
-					</mat-card-content>
-				</mat-card>
-				<mat-card *ngIf="fileUploaded">
-					<mat-card-content>
-						<p><strong>Archivo:</strong> excel para test.xlsx</p>
-						<p><strong>Estado:</strong> ✅ Cargado exitosamente</p>
-						<p><strong>Cabeceras detectadas:</strong> {{ headers.length }}</p>
-					</mat-card-content>
-				</mat-card>
-			</div>
-		</mat-expansion-panel>
+		<app-step1-upload
+			[isStepCurrent]="isStepCurrent(1)"
+			[canAccessStep]="canAccessStep(1)"
+			[isStepCompleted]="isStepCompleted(1)"
+			[fileUploaded]="fileUploaded"
+			[headersLength]="headers.length"
+			(fileUpload)="onFileUpload()">
+		</app-step1-upload>
 
 		<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
 		<mat-expansion-panel

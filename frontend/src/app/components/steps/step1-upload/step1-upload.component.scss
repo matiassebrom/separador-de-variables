@@ -1,0 +1,23 @@
+.upload-area {
+  text-align: center;
+  padding: 2rem;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s;
+}
+
+.upload-area:hover {
+  border-color: #666;
+}
+
+.upload-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.upload-card {
+  margin: 1rem 0;
+}

@@ -32,6 +32,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+  selectedFilterColumn: string = '';
   selectedFiltersMap: Record<string, boolean> = {};
   selectedColumnsMap: Record<string, boolean> = {};
 

@@ -9,25 +9,34 @@
 
 	<mat-accordion class="steps-accordion">
 		<!-- ==================== PASO 1: SUBIR ARCHIVO ==================== -->
-		<mat-expansion-panel 
-			[expanded]="isStepCurrent(1)" 
+		<mat-expansion-panel
+			[expanded]="isStepCurrent(1)"
 			[disabled]="!canAccessStep(1)">
 			<mat-expansion-panel-header>
 				<mat-panel-title>
-					<mat-icon>{{ isStepCompleted(1) ? 'check_circle' : (isStepCurrent(1) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					<mat-icon>{{
+						isStepCompleted(1)
+							? 'check_circle'
+							: isStepCurrent(1)
+							? 'radio_button_checked'
+							: 'radio_button_unchecked'
+					}}</mat-icon>
 					&nbsp; 1) Subir archivo
 				</mat-panel-title>
-				<mat-panel-description *ngIf="fileUploaded">
-					excel para test.xlsx - ✅ Cargado
-				</mat-panel-description>
+				<mat-panel-description *ngIf="fileUploaded"> excel para test.xlsx - ✅ Cargado </mat-panel-description>
 			</mat-expansion-panel-header>
 			<div class="step-content">
-				<mat-card class="upload-card" *ngIf="!fileUploaded">
+				<mat-card
+					class="upload-card"
+					*ngIf="!fileUploaded">
 					<mat-card-content>
 						<div class="upload-area">
 							<mat-icon class="upload-icon">cloud_upload</mat-icon>
 							<p>Arrastra tu archivo Excel aquí o selecciona uno</p>
-							<button mat-raised-button color="primary" (click)="onFileUpload()">
+							<button
+								mat-raised-button
+								color="primary"
+								(click)="onFileUpload()">
 								Seleccionar archivo
 							</button>
 						</div>
@@ -44,12 +53,18 @@
 		</mat-expansion-panel>
 
 		<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
-		<mat-expansion-panel 
-			[expanded]="isStepCurrent(2)" 
+		<mat-expansion-panel
+			[expanded]="isStepCurrent(2)"
 			[disabled]="!canAccessStep(2)">
 			<mat-expansion-panel-header>
 				<mat-panel-title>
-					<mat-icon>{{ isStepCompleted(2) ? 'check_circle' : (isStepCurrent(2) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					<mat-icon>{{
+						isStepCompleted(2)
+							? 'check_circle'
+							: isStepCurrent(2)
+							? 'radio_button_checked'
+							: 'radio_button_unchecked'
+					}}</mat-icon>
 					&nbsp; 2) Elegir 'Separar por'
 				</mat-panel-title>
 				<mat-panel-description *ngIf="isStepCompleted(2)">
@@ -57,16 +72,23 @@
 				</mat-panel-description>
 			</mat-expansion-panel-header>
 			<div class="step-content">
-				<mat-form-field appearance="outline" class="full-width">
+				<mat-form-field
+					appearance="outline"
+					class="full-width">
 					<mat-label>Separar por (columna)</mat-label>
-						<mat-select [(ngModel)]="selectedSeparateBy">
-						<mat-option *ngFor="let header of headers" [value]="header">
+					<mat-select [(ngModel)]="selectedSeparateBy">
+						<mat-option
+							*ngFor="let header of headers"
+							[value]="header">
 							{{ header }}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
 				<div class="step-actions">
-					<button mat-raised-button color="primary" (click)="nextStep()">
+					<button
+						mat-raised-button
+						color="primary"
+						(click)="nextStep()">
 						Continuar
 					</button>
 				</div>
@@ -74,12 +96,18 @@
 		</mat-expansion-panel>
 
 		<!-- ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ==================== -->
-		<mat-expansion-panel 
-			[expanded]="isStepCurrent(3)" 
+		<mat-expansion-panel
+			[expanded]="isStepCurrent(3)"
 			[disabled]="!canAccessStep(3)">
 			<mat-expansion-panel-header>
 				<mat-panel-title>
-					<mat-icon>{{ isStepCompleted(3) ? 'check_circle' : (isStepCurrent(3) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					<mat-icon>{{
+						isStepCompleted(3)
+							? 'check_circle'
+							: isStepCurrent(3)
+							? 'radio_button_checked'
+							: 'radio_button_unchecked'
+					}}</mat-icon>
 					&nbsp; 3) Configurar filtros (opcional)
 				</mat-panel-title>
 				<mat-panel-description *ngIf="selectedFilters.length > 0">
@@ -88,11 +116,15 @@
 			</mat-expansion-panel-header>
 			<div class="step-content">
 				<p>Podés agregar filtros para incluir/excluir datos. Es opcional.</p>
-				<mat-form-field appearance="outline" class="full-width">
+				<mat-form-field
+					appearance="outline"
+					class="full-width">
 					<mat-label>Columna a filtrar</mat-label>
-					<mat-select value="ETAPA">
+					<mat-select [(ngModel)]="selectedFilterColumn">
 						<mat-option value="">( ninguna )</mat-option>
-						<mat-option *ngFor="let header of headers" [value]="header">
+						<mat-option
+							*ngFor="let header of headers"
+							[value]="header">
 							{{ header }}
 						</mat-option>
 					</mat-select>
@@ -100,15 +132,17 @@
 				<div class="filter-values">
 					<p><strong>Valores permitidos (ETAPA):</strong></p>
 					<div class="checkbox-group">
-						<mat-checkbox 
-							*ngFor="let value of etapaValues" 
+						<mat-checkbox
+							*ngFor="let value of etapaValues"
 							[(ngModel)]="selectedFiltersMap[value]"
 							(ngModelChange)="onFilterCheckboxModelChange(value, $event)">
 							{{ value }}
 						</mat-checkbox>
 					</div>
 				</div>
-				<div class="current-filters" *ngIf="selectedFilters.length > 0">
+				<div
+					class="current-filters"
+					*ngIf="selectedFilters.length > 0">
 					<p><strong>Filtros actuales:</strong></p>
 					<mat-chip-listbox>
 						<mat-chip>ETAPA: {{ selectedFilters.join(', ') }}</mat-chip>
@@ -116,7 +150,10 @@
 				</div>
 				<div class="step-actions">
 					<button mat-button>Limpiar filtros</button>
-					<button mat-raised-button color="primary" (click)="nextStep()">
+					<button
+						mat-raised-button
+						color="primary"
+						(click)="nextStep()">
 						Continuar
 					</button>
 				</div>
@@ -124,12 +161,18 @@
 		</mat-expansion-panel>
 
 		<!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
-		<mat-expansion-panel 
-			[expanded]="isStepCurrent(4)" 
+		<mat-expansion-panel
+			[expanded]="isStepCurrent(4)"
 			[disabled]="!canAccessStep(4)">
 			<mat-expansion-panel-header>
 				<mat-panel-title>
-					<mat-icon>{{ isStepCompleted(4) ? 'check_circle' : (isStepCurrent(4) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					<mat-icon>{{
+						isStepCompleted(4)
+							? 'check_circle'
+							: isStepCurrent(4)
+							? 'radio_button_checked'
+							: 'radio_button_unchecked'
+					}}</mat-icon>
 					&nbsp; 4) Elegir 'Datos a guardar'
 				</mat-panel-title>
 				<mat-panel-description *ngIf="selectedColumns.length > 0">
@@ -139,15 +182,18 @@
 			<div class="step-content">
 				<p><strong>Selecciona las columnas que quieres incluir en los archivos generados:</strong></p>
 				<div class="columns-grid">
-					<mat-checkbox 
-						*ngFor="let header of headers" 
+					<mat-checkbox
+						*ngFor="let header of headers"
 						[(ngModel)]="selectedColumnsMap[header]"
 						(ngModelChange)="onColumnCheckboxModelChange(header, $event)">
 						{{ header }}
 					</mat-checkbox>
 				</div>
 				<div class="step-actions">
-					<button mat-raised-button color="primary" (click)="nextStep()">
+					<button
+						mat-raised-button
+						color="primary"
+						(click)="nextStep()">
 						Continuar
 					</button>
 				</div>
@@ -155,12 +201,18 @@
 		</mat-expansion-panel>
 
 		<!-- ==================== PASO 5: NOMBRE BASE Y DESCARGAR ==================== -->
-		<mat-expansion-panel 
-			[expanded]="isStepCurrent(5)" 
+		<mat-expansion-panel
+			[expanded]="isStepCurrent(5)"
 			[disabled]="!canAccessStep(5)">
 			<mat-expansion-panel-header>
 				<mat-panel-title>
-					<mat-icon>{{ isStepCompleted(5) ? 'check_circle' : (isStepCurrent(5) ? 'radio_button_checked' : 'radio_button_unchecked') }}</mat-icon>
+					<mat-icon>{{
+						isStepCompleted(5)
+							? 'check_circle'
+							: isStepCurrent(5)
+							? 'radio_button_checked'
+							: 'radio_button_unchecked'
+					}}</mat-icon>
 					&nbsp; 5) Nombre base y descargar
 				</mat-panel-title>
 				<mat-panel-description *ngIf="baseName">
@@ -169,9 +221,14 @@
 			</mat-expansion-panel-header>
 			<div class="step-content">
 				<!-- Nombre base -->
-				<mat-form-field appearance="outline" class="full-width">
+				<mat-form-field
+					appearance="outline"
+					class="full-width">
 					<mat-label>Nombre base para los archivos</mat-label>
-						<input matInput [(ngModel)]="baseName" placeholder="datos_separados" />
+					<input
+						matInput
+						[(ngModel)]="baseName"
+						placeholder="datos_separados" />
 					<mat-hint>Los archivos se nombrarán como: [base] - [columna] - [valor].xlsx</mat-hint>
 				</mat-form-field>
 				<!-- Resumen -->
@@ -181,7 +238,8 @@
 					</mat-card-header>
 					<mat-card-content>
 						<p><strong>Separar por:</strong> {{ selectedSeparateBy }}</p>
-						<p><strong>Filtros:</strong> 
+						<p>
+							<strong>Filtros:</strong>
 							<span *ngIf="selectedFilters.length > 0">ETAPA: {{ selectedFilters.join(', ') }}</span>
 							<span *ngIf="selectedFilters.length === 0">Sin filtros</span>
 						</p>
@@ -191,18 +249,18 @@
 				</mat-card>
 				<!-- Preview de archivos -->
 				<div class="files-preview">
-						<h3>📁 Se generarán {{ includedPreviewFiles.length }} archivos:</h3>
+					<h3>📁 Se generarán {{ includedPreviewFiles.length }} archivos:</h3>
 					<p class="hint">Haz clic en ✅ para excluir archivos que no quieras descargar</p>
 					<div class="file-list">
-						<mat-card 
-							*ngFor="let file of previewFiles; let i = index" 
+						<mat-card
+							*ngFor="let file of previewFiles; let i = index"
 							class="file-item"
 							[class.excluded]="file.excluded">
 							<mat-card-content>
-								<button 
-									mat-icon-button 
+								<button
+									mat-icon-button
 									(click)="toggleFileExclusion(i)"
-									[color]="file.excluded ? 'warn' : 'primary'">
+									[ngClass]="file.excluded ? 'warn-btn' : 'primary-btn'">
 									<mat-icon>{{ file.excluded ? 'cancel' : 'check_circle' }}</mat-icon>
 								</button>
 								<span [class.excluded-text]="file.excluded">{{ file.name }}</span>
@@ -212,10 +270,15 @@
 				</div>
 				<!-- Acción final -->
 				<div class="step-actions final-action">
-					<button mat-raised-button color="accent" size="large">
+					<button
+						mat-raised-button
+						color="accent"
+						class="large-btn">
 						<mat-icon>download</mat-icon>
 						&nbsp; Generar y descargar archivos
 					</button>
 				</div>
 			</div>
-		</mat-expansion-panel>
+		</mat-expansion-panel></mat-accordion
+	>
+</div>

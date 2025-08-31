@@ -1,42 +1,38 @@
-<mat-expansion-panel
-  [expanded]="isStepCurrent"
-  [disabled]="!canAccessStep">
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      <mat-icon>{{
-        isStepCompleted
-          ? 'check_circle'
-          : isStepCurrent
-          ? 'radio_button_checked'
-          : 'radio_button_unchecked'
-      }}</mat-icon>
-      &nbsp; 1) Subir archivo
-    </mat-panel-title>
-    <mat-panel-description *ngIf="fileUploaded"> excel para test.xlsx - ✅ Cargado </mat-panel-description>
-  </mat-expansion-panel-header>
-  <div class="step-content">
-    <mat-card
-      class="upload-card"
-      *ngIf="!fileUploaded">
-      <mat-card-content>
-        <div class="upload-area">
-          <mat-icon class="upload-icon">cloud_upload</mat-icon>
-          <p>Arrastra tu archivo Excel aquí o selecciona uno</p>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="onFileUpload()">
-            Seleccionar archivo
-          </button>
-        </div>
-      </mat-card-content>
-    </mat-card>
-    <mat-card *ngIf="fileUploaded">
-      <mat-card-content>
-        <p><strong>Archivo:</strong> excel para test.xlsx</p>
-        <p><strong>Estado:</strong> ✅ Cargado exitosamente</p>
-        <p><strong>Cabeceras detectadas:</strong> {{ headersLength }}</p>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</mat-expansion-panel>
+<div class="step1-container">
+	<h2>
+		<mat-icon>cloud_upload</mat-icon>
+		&nbsp; 1) Subir archivo
+	</h2>
+
+	<div class="step-content">
+		<mat-card
+			class="upload-card"
+			*ngIf="!fileUploaded">
+			<mat-card-content>
+				<div class="upload-area">
+					<mat-icon class="upload-icon">cloud_upload</mat-icon>
+					<p>Arrastra tu archivo Excel aquí o selecciona uno</p>
+					<button
+						mat-raised-button
+						color="primary"
+						(click)="onFileUpload()">
+						Seleccionar archivo
+					</button>
+				</div>
+			</mat-card-content>
+		</mat-card>
+
+		<mat-card *ngIf="fileUploaded">
+			<mat-card-content>
+				<div class="success-message">
+					<mat-icon class="success-icon">check_circle</mat-icon>
+					<div>
+						<p><strong>Archivo:</strong> excel para test.xlsx</p>
+						<p><strong>Estado:</strong> ✅ Cargado exitosamente</p>
+						<p>¡El archivo se cargó correctamente! Ahora puedes continuar con el siguiente paso.</p>
+					</div>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>

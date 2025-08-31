@@ -44,6 +44,9 @@ export class AppComponent implements OnInit {
 	title = 'split-excel-frontend';
 	currentStep = 1;
 	fileUploaded = false;
+
+	// <todo esto esta harcodeado para hacer pruebas
+
 	selectedSeparateBy = 'ORIGEN';
 	selectedColumns = ['ORIGEN', 'ETAPA', 'ID', 'TIPO'];
 	baseName = 'datos_separados';

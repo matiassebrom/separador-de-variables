@@ -17,6 +17,7 @@ export class Step1UploadComponent {
 	@Output() fileUpload = new EventEmitter<void>();
 
 	selectedFile: File | null = null;
+	isDragOver = false;
 
 	constructor(private api: ApiService) {}
 
@@ -27,6 +28,24 @@ export class Step1UploadComponent {
 		} else {
 			this.selectedFile = null;
 		}
+	}
+
+	onFileDrop(event: DragEvent) {
+		event.preventDefault();
+		this.isDragOver = false;
+		if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+			this.selectedFile = event.dataTransfer.files[0];
+		}
+	}
+
+	onDragOver(event: DragEvent) {
+		event.preventDefault();
+		this.isDragOver = true;
+	}
+
+	onDragLeave(event: DragEvent) {
+		event.preventDefault();
+		this.isDragOver = false;
 	}
 
 	onFileUpload() {

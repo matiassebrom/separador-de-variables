@@ -10,19 +10,51 @@
 			*ngIf="!fileUploaded">
 			<mat-card-content>
 				<div class="upload-area">
-					<mat-icon class="upload-icon">cloud_upload</mat-icon>
-					<p>Arrastra tu archivo Excel aquí o selecciona uno</p>
-					<input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
+					<div class="upload-content">
+						<div
+							class="file-drop-area"
+							(drop)="onFileDrop($event)"
+							(dragover)="onDragOver($event)"
+							(dragleave)="onDragLeave($event)"
+							[class.dragover]="isDragOver">
+							<mat-icon
+								class="upload-icon"
+								style="font-size: 48px"
+								>cloud_upload</mat-icon
+							>
+							<p class="hint">Arrastra tu archivo Excel aquí</p>
+							<input
+								#fileInput
+								type="file"
+								accept=".xlsx,.xls"
+								(change)="onFileSelected($event)"
+								style="display: none" />
+						</div>
+						<div
+							*ngIf="selectedFile"
+							class="selected-file-info">
+							<p><strong>Seleccionado:</strong> {{ selectedFile.name }}</p>
+						</div>
+					</div>
+				</div>
+				<div class="buttons-container">
 					<button
 						mat-raised-button
 						color="primary"
+						style="margin-top: 1.5rem"
+						(click)="fileInput.click()">
+						<mat-icon>attach_file</mat-icon>
+						Elegir archivo
+					</button>
+					<button
+						mat-raised-button
+						color="accent"
 						[disabled]="!selectedFile"
-						(click)="onFileUpload()">
+						(click)="onFileUpload()"
+						style="margin-top: 1.5rem">
+						<mat-icon>cloud_upload</mat-icon>
 						Subir archivo
 					</button>
-					<div *ngIf="selectedFile">
-						<p><strong>Seleccionado:</strong> {{ selectedFile.name }}</p>
-					</div>
 				</div>
 			</mat-card-content>
 		</mat-card>

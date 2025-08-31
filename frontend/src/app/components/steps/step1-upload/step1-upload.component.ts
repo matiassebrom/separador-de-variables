@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
-import { ApiService } from '../../../services/api.service';
+import { ApiService, UploadFileResponse } from '../../../services/api.service';
+import { FileStateService } from '../../../services/file-state.service';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,13 +22,18 @@ export class Step1UploadComponent {
 	selectedFile = signal<File | null>(null);
 	isDragOver = signal(false);
 	isUploading = signal(false);
+	uploadStatus = signal<string>('');
 
-	constructor(private api: ApiService) {}
+	constructor(
+		private api: ApiService,
+		public fileStateService: FileStateService
+	) {}
 
 	onFileSelected(event: Event) {
 		const input = event.target as HTMLInputElement;
 		if (input.files && input.files.length > 0) {
 			this.selectedFile.set(input.files[0]);
+			this.uploadStatus.set('');
 		} else {
 			this.selectedFile.set(null);
 		}
@@ -38,6 +44,7 @@ export class Step1UploadComponent {
 		this.isDragOver.set(false);
 		if (event.dataTransfer && event.dataTransfer.files.length > 0) {
 			this.selectedFile.set(event.dataTransfer.files[0]);
+			this.uploadStatus.set('');
 		}
 	}
 
@@ -55,24 +62,58 @@ export class Step1UploadComponent {
 		const file = this.selectedFile();
 		if (!file) {
 			console.warn('No file selected');
+			this.uploadStatus.set('❌ No hay archivo seleccionado');
 			return;
 		}
 
 		this.isUploading.set(true); // 🚀 Activar loading
+		this.uploadStatus.set('Subiendo archivo...');
 
 		const formData = new FormData();
 		formData.append('file', file);
 
 		this.api.uploadExcel(formData).subscribe({
-			next: (resp: any) => {
-				console.log('Respuesta backend:', resp);
+			next: (response: UploadFileResponse) => {
+				console.log('Respuesta backend:', response);
 				this.isUploading.set(false); // ✅ Desactivar loading
+				this.uploadStatus.set(`✓ ${response.message}`);
+				
+				// 💾 Guardar información del archivo en el estado global
+				this.fileStateService.setUploadedFile({
+					file_id: response.file_id,
+					filename: response.filename,
+					message: response.message
+				});
+				
+				console.log('File ID guardado:', this.fileStateService.fileId());
 				this.fileUpload.emit();
 			},
 			error: (err: any) => {
 				console.error('Error backend:', err);
 				this.isUploading.set(false); // ❌ Desactivar loading en error
+				this.uploadStatus.set('❌ Error al subir el archivo');
 			},
+		});
+	}
+
+	// 🧪 Método para probar el uso del file_id guardado
+	testGetHeaders() {
+		const fileId = this.fileStateService.fileId();
+		if (!fileId) {
+			this.uploadStatus.set('❌ No hay archivo subido');
+			return;
+		}
+
+		this.uploadStatus.set('Obteniendo headers...');
+		this.api.getHeaders(fileId).subscribe({
+			next: (response) => {
+				console.log('Headers obtenidos:', response);
+				this.uploadStatus.set(`✓ Headers obtenidos: ${response.headers.length} columnas`);
+			},
+			error: (error) => {
+				console.error('Error al obtener headers:', error);
+				this.uploadStatus.set('❌ Error al obtener headers');
+			}
 		});
 	}
 }

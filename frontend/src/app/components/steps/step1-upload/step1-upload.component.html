@@ -44,6 +44,13 @@
 							<span>{{ file.name }}</span>
 						</div>
 						}
+
+						<!-- 📊 Estado del upload -->
+						@if (uploadStatus()) {
+						<div class="upload-status" [class.error]="uploadStatus().includes('❌')" [class.success]="uploadStatus().includes('✓')">
+							{{ uploadStatus() }}
+						</div>
+						}
 					</div>
 				</div>
 				<div class="buttons-container">
@@ -72,6 +79,17 @@
 						</ng-container>
 						}
 					</button>
+					
+					<!-- 🧪 Botón de prueba para obtener headers -->
+					<button
+						mat-stroked-button
+						color="accent"
+						style="margin-top: 1.5rem"
+						(click)="testGetHeaders()"
+						[disabled]="!fileStateService.hasFile()">
+						<mat-icon>list</mat-icon>
+						Probar obtener headers
+					</button>
 				</div>
 			</mat-card-content>
 		</mat-card>
@@ -81,7 +99,8 @@
 				<div class="success-message">
 					<mat-icon class="success-icon">check_circle</mat-icon>
 					<div>
-						<p><strong>Archivo:</strong> excel para test.xlsx</p>
+						<p><strong>Archivo:</strong> {{ fileStateService.filename() || 'excel para test.xlsx' }}</p>
+						<p><strong>File ID:</strong> {{ fileStateService.fileId() }}</p>
 						<p><strong>Estado:</strong> ✅ Cargado exitosamente</p>
 						<p>¡El archivo se cargó correctamente! Ahora puedes continuar con el siguiente paso.</p>
 					</div>

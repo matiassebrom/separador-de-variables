@@ -81,6 +81,26 @@
 	}
 }
 
+.upload-status {
+	margin: 16px 0;
+	padding: 12px;
+	border-radius: 4px;
+	text-align: center;
+	font-weight: 500;
+	
+	&.success {
+		background-color: #e8f5e8;
+		color: #2e7d32;
+		border: 1px solid #4caf50;
+	}
+	
+	&.error {
+		background-color: #ffebee;
+		color: #c62828;
+		border: 1px solid #f44336;
+	}
+}
+
 .buttons-container {
 	display: flex;
 	gap: 16px;

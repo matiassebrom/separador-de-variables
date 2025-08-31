@@ -12,12 +12,17 @@
 				<div class="upload-area">
 					<mat-icon class="upload-icon">cloud_upload</mat-icon>
 					<p>Arrastra tu archivo Excel aquí o selecciona uno</p>
+					<input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
 					<button
 						mat-raised-button
 						color="primary"
+						[disabled]="!selectedFile"
 						(click)="onFileUpload()">
-						Seleccionar archivo
+						Subir archivo
 					</button>
+					<div *ngIf="selectedFile">
+						<p><strong>Seleccionado:</strong> {{ selectedFile.name }}</p>
+					</div>
 				</div>
 			</mat-card-content>
 		</mat-card>

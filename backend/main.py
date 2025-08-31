@@ -1,6 +1,7 @@
 import os
 from fastapi.responses import FileResponse
 from fastapi import BackgroundTasks, FastAPI, UploadFile, File, HTTPException, Body
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
@@ -29,7 +30,17 @@ class ValuesToKeepByHeader(BaseModel):
     values: list
 
 # ------------------- APP Y ENDPOINTS -------------------
+
 app = FastAPI()
+
+# Permitir CORS para desarrollo
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cambia esto a la URL de tu frontend en producción
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
@@ -41,7 +52,8 @@ async def upload_file(file: UploadFile = File(...)) -> UploadFileResponse:
     Sube un archivo Excel, lo guarda en memoria y retorna un id único.
     """
     file_id = save_uploaded_file(file)
-    return UploadFileResponse(file_id=file_id, filename=file.filename, message="Archivo cargado exitosamente")
+    filename = file.filename if file.filename is not None else "archivo.xlsx"
+    return UploadFileResponse(file_id=file_id, filename=filename, message="Archivo cargado exitosamente")
 
 @app.get("/get_headers/{file_id}", response_model=HeadersResponse)
 def get_headers(file_id: str) -> HeadersResponse:

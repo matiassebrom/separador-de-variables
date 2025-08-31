@@ -13,4 +13,8 @@ export class ApiService {
 	pingBackend(): Observable<any> {
 		return this.http.get(`${this.baseUrl}/`);
 	}
+
+	uploadExcel(formData: FormData): Observable<any> {
+		return this.http.post(`${this.baseUrl}/upload_file`, formData);
+	}
 }

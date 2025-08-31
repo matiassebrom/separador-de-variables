@@ -12,8 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
 
-// Importar el nuevo componente
+// Importar los nuevos componentes
 import { Step1UploadComponent } from './components/steps/step1-upload/step1-upload.component';
+import { Step2SeparateByComponent } from './components/steps/step2-separate-by/step2-separate-by.component';
 
 @Component({
 	selector: 'app-root',
@@ -31,8 +32,9 @@ import { Step1UploadComponent } from './components/steps/step1-upload/step1-uplo
 		MatIconModule,
 		MatChipsModule,
 		FormsModule,
-		// Nuevo componente
+		// Nuevos componentes
 		Step1UploadComponent,
+		Step2SeparateByComponent,
 	],
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.scss',
@@ -132,6 +134,11 @@ export class AppComponent implements OnInit {
 		this.fileUploaded = true;
 		this.nextStep();
 	}
+	
+	onSeparateBySelected(value: string) {
+		this.selectedSeparateBy = value;
+	}
+	
 	toggleFileExclusion(index: number) {
 		this.previewFiles[index].excluded = !this.previewFiles[index].excluded;
 	}

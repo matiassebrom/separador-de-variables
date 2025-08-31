@@ -92,25 +92,4 @@ export class Step1UploadComponent {
 			},
 		});
 	}
-
-	// 🧪 Método para probar el uso del file_id guardado
-	testGetHeaders() {
-		const fileId = this.fileStateService.fileId();
-		if (!fileId) {
-			this.uploadStatus.set('❌ No hay archivo subido');
-			return;
-		}
-
-		this.uploadStatus.set('Obteniendo headers...');
-		this.api.getHeaders(fileId).subscribe({
-			next: (response) => {
-				console.log('Headers obtenidos:', response);
-				this.uploadStatus.set(`✓ Headers obtenidos: ${response.headers.length} columnas`);
-			},
-			error: (error) => {
-				console.error('Error al obtener headers:', error);
-				this.uploadStatus.set('❌ Error al obtener headers');
-			},
-		});
-	}
 }

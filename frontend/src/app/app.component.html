@@ -15,47 +15,14 @@
 		</app-step1-upload>
 
 		<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
-		<!-- <mat-expansion-panel
-			[expanded]="isStepCurrent(2)"
-			[disabled]="!canAccessStep(2)">
-			<mat-expansion-panel-header>
-				<mat-panel-title>
-					<mat-icon>{{
-						isStepCompleted(2)
-							? 'check_circle'
-							: isStepCurrent(2)
-							? 'radio_button_checked'
-							: 'radio_button_unchecked'
-					}}</mat-icon>
-					&nbsp; 2) Elegir 'Separar por'
-				</mat-panel-title>
-				<mat-panel-description *ngIf="isStepCompleted(2)">
-					Separar por: {{ selectedSeparateBy }}
-				</mat-panel-description>
-			</mat-expansion-panel-header>
-			<div class="step-content">
-				<mat-form-field
-					appearance="outline"
-					class="full-width">
-					<mat-label>Separar por (columna)</mat-label>
-					<mat-select [(ngModel)]="selectedSeparateBy">
-						<mat-option
-							*ngFor="let header of headers"
-							[value]="header">
-							{{ header }}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-				<div class="step-actions">
-					<button
-						mat-raised-button
-						color="primary"
-						(click)="nextStep()">
-						Continuar
-					</button>
-				</div>
-			</div>
-		</mat-expansion-panel> -->
+		<app-step2-separate-by
+			[isStepCurrent]="isStepCurrent(2)"
+			[canAccessStep]="canAccessStep(2)"
+			[isStepCompleted]="isStepCompleted(2)"
+			[selectedSeparateBy]="selectedSeparateBy"
+			(separateBySelected)="onSeparateBySelected($event)"
+			(nextStep)="nextStep()">
+		</app-step2-separate-by>
 
 		<!-- ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ==================== -->
 		<!-- <mat-expansion-panel

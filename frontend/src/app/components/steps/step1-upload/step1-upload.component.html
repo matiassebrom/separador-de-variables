@@ -16,13 +16,20 @@
 							(drop)="onFileDrop($event)"
 							(dragover)="onDragOver($event)"
 							(dragleave)="onDragLeave($event)"
-							[class.dragover]="isDragOver">
+							[class.dragover]="isDragOver()"
+							[class.uploading]="isUploading()">
+							@if (isUploading()) {
+							<mat-spinner diameter="40"></mat-spinner>
+							<p>Subiendo archivo...</p>
+							} @else {
 							<mat-icon
 								class="upload-icon"
 								style="font-size: 48px"
 								>cloud_upload</mat-icon
 							>
 							<p class="hint">Arrastra tu archivo Excel aquí</p>
+							}
+
 							<input
 								#fileInput
 								type="file"
@@ -30,30 +37,40 @@
 								(change)="onFileSelected($event)"
 								style="display: none" />
 						</div>
-						<div
-							*ngIf="selectedFile"
-							class="selected-file-info">
-							<p><strong>Seleccionado:</strong> {{ selectedFile.name }}</p>
+
+						@if (selectedFile(); as file) {
+						<div class="selected-file-info">
+							<mat-icon>description</mat-icon>
+							<span>{{ file.name }}</span>
 						</div>
+						}
 					</div>
 				</div>
 				<div class="buttons-container">
 					<button
-						mat-raised-button
+						mat-stroked-button
 						color="primary"
 						style="margin-top: 1.5rem"
-						(click)="fileInput.click()">
-						<mat-icon>attach_file</mat-icon>
+						(click)="fileInput.click()"
+						[disabled]="isUploading()">
+						<mat-icon>folder_open</mat-icon>
 						Elegir archivo
 					</button>
 					<button
 						mat-raised-button
-						color="accent"
-						[disabled]="!selectedFile"
+						color="primary"
+						[disabled]="!selectedFile() || isUploading()"
 						(click)="onFileUpload()"
 						style="margin-top: 1.5rem">
-						<mat-icon>cloud_upload</mat-icon>
-						Subir archivo
+						@if (isUploading()) {
+						<mat-spinner diameter="16"></mat-spinner>
+						<span>Subiendo...</span>
+						} @else {
+						<ng-container>
+							<mat-icon>cloud_upload</mat-icon>
+							<span>Subir archivo</span>
+						</ng-container>
+						}
 					</button>
 				</div>
 			</mat-card-content>

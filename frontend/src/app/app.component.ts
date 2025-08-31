@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from './services/api.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,7 +33,6 @@ import { Step1UploadComponent } from './components/steps/step1-upload/step1-uplo
 		FormsModule,
 		// Nuevo componente
 		Step1UploadComponent,
-		HttpClientModule,
 	],
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.scss',

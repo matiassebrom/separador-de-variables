@@ -24,10 +24,7 @@ export class Step1UploadComponent {
 	isUploading = signal(false);
 	uploadStatus = signal<string>('');
 
-	constructor(
-		private api: ApiService,
-		public fileStateService: FileStateService
-	) {}
+	constructor(private api: ApiService, public fileStateService: FileStateService) {}
 
 	onFileSelected(event: Event) {
 		const input = event.target as HTMLInputElement;
@@ -77,14 +74,14 @@ export class Step1UploadComponent {
 				console.log('Respuesta backend:', response);
 				this.isUploading.set(false); // ✅ Desactivar loading
 				this.uploadStatus.set(`✓ ${response.message}`);
-				
+
 				// 💾 Guardar información del archivo en el estado global
 				this.fileStateService.setUploadedFile({
 					file_id: response.file_id,
 					filename: response.filename,
-					message: response.message
+					message: response.message,
 				});
-				
+
 				console.log('File ID guardado:', this.fileStateService.fileId());
 				this.fileUpload.emit();
 			},
@@ -113,7 +110,7 @@ export class Step1UploadComponent {
 			error: (error) => {
 				console.error('Error al obtener headers:', error);
 				this.uploadStatus.set('❌ Error al obtener headers');
-			}
+			},
 		});
 	}
 }

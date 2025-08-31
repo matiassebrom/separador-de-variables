@@ -47,7 +47,10 @@
 
 						<!-- 📊 Estado del upload -->
 						@if (uploadStatus()) {
-						<div class="upload-status" [class.error]="uploadStatus().includes('❌')" [class.success]="uploadStatus().includes('✓')">
+						<div
+							class="upload-status"
+							[class.error]="uploadStatus().includes('❌')"
+							[class.success]="uploadStatus().includes('✓')">
 							{{ uploadStatus() }}
 						</div>
 						}
@@ -79,7 +82,7 @@
 						</ng-container>
 						}
 					</button>
-					
+
 					<!-- 🧪 Botón de prueba para obtener headers -->
 					<button
 						mat-stroked-button

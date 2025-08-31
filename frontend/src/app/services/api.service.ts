@@ -3,32 +3,32 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface UploadFileResponse {
-  file_id: string;
-  filename: string;
-  message: string;
+	file_id: string;
+	filename: string;
+	message: string;
 }
 
 export interface HeadersResponse {
-  headers: string[];
+	headers: string[];
 }
 
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:8000';
+	private baseUrl = 'http://localhost:8000';
 
-  constructor(private http: HttpClient) {}
+	constructor(private http: HttpClient) {}
 
-  pingBackend(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/`);
-  }
+	pingBackend(): Observable<any> {
+		return this.http.get(`${this.baseUrl}/`);
+	}
 
-  uploadExcel(formData: FormData): Observable<UploadFileResponse> {
-    return this.http.post<UploadFileResponse>(`${this.baseUrl}/upload_file`, formData);
-  }
+	uploadExcel(formData: FormData): Observable<UploadFileResponse> {
+		return this.http.post<UploadFileResponse>(`${this.baseUrl}/upload_file`, formData);
+	}
 
-  getHeaders(fileId: string): Observable<HeadersResponse> {
-    return this.http.get<HeadersResponse>(`${this.baseUrl}/get_headers/${fileId}`);
-  }
+	getHeaders(fileId: string): Observable<HeadersResponse> {
+		return this.http.get<HeadersResponse>(`${this.baseUrl}/get_headers/${fileId}`);
+	}
 }

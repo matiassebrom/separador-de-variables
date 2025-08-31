@@ -10,16 +10,12 @@
 	<mat-accordion class="steps-accordion">
 		<!-- ==================== PASO 1: SUBIR ARCHIVO ==================== -->
 		<app-step1-upload
-			[isStepCurrent]="isStepCurrent(1)"
-			[canAccessStep]="canAccessStep(1)"
-			[isStepCompleted]="isStepCompleted(1)"
 			[fileUploaded]="fileUploaded"
-			[headersLength]="headers.length"
 			(fileUpload)="onFileUpload()">
 		</app-step1-upload>
 
 		<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
-		<mat-expansion-panel
+		<!-- <mat-expansion-panel
 			[expanded]="isStepCurrent(2)"
 			[disabled]="!canAccessStep(2)">
 			<mat-expansion-panel-header>
@@ -59,10 +55,10 @@
 					</button>
 				</div>
 			</div>
-		</mat-expansion-panel>
+		</mat-expansion-panel> -->
 
 		<!-- ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ==================== -->
-		<mat-expansion-panel
+		<!-- <mat-expansion-panel
 			[expanded]="isStepCurrent(3)"
 			[disabled]="!canAccessStep(3)">
 			<mat-expansion-panel-header>
@@ -124,10 +120,10 @@
 					</button>
 				</div>
 			</div>
-		</mat-expansion-panel>
+		</mat-expansion-panel> -->
 
 		<!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
-		<mat-expansion-panel
+		<!-- <mat-expansion-panel
 			[expanded]="isStepCurrent(4)"
 			[disabled]="!canAccessStep(4)">
 			<mat-expansion-panel-header>
@@ -164,10 +160,10 @@
 					</button>
 				</div>
 			</div>
-		</mat-expansion-panel>
+		</mat-expansion-panel> -->
 
 		<!-- ==================== PASO 5: NOMBRE BASE Y DESCARGAR ==================== -->
-		<mat-expansion-panel
+		<!-- <mat-expansion-panel
 			[expanded]="isStepCurrent(5)"
 			[disabled]="!canAccessStep(5)">
 			<mat-expansion-panel-header>
@@ -184,10 +180,10 @@
 				<mat-panel-description *ngIf="baseName">
 					{{ baseName }}
 				</mat-panel-description>
-			</mat-expansion-panel-header>
-			<div class="step-content">
-				<!-- Nombre base -->
-				<mat-form-field
+			</mat-expansion-panel-header> -->
+		<div class="step-content">
+			<!-- Nombre base -->
+			<!-- <mat-form-field
 					appearance="outline"
 					class="full-width">
 					<mat-label>Nombre base para los archivos</mat-label>
@@ -196,9 +192,9 @@
 						[(ngModel)]="baseName"
 						placeholder="datos_separados" />
 					<mat-hint>Los archivos se nombrarán como: [base] - [columna] - [valor].xlsx</mat-hint>
-				</mat-form-field>
-				<!-- Resumen -->
-				<mat-card class="summary-card">
+				</mat-form-field> -->
+			<!-- Resumen -->
+			<!-- <mat-card class="summary-card">
 					<mat-card-header>
 						<mat-card-title>📋 Resumen de configuración</mat-card-title>
 					</mat-card-header>
@@ -212,9 +208,9 @@
 						<p><strong>Columnas:</strong> {{ selectedColumns.join(', ') }}</p>
 						<p><strong>Nombre base:</strong> {{ baseName }}</p>
 					</mat-card-content>
-				</mat-card>
-				<!-- Preview de archivos -->
-				<div class="files-preview">
+				</mat-card> -->
+			<!-- Preview de archivos -->
+			<!-- <div class="files-preview">
 					<h3>📁 Se generarán {{ includedPreviewFiles.length }} archivos:</h3>
 					<p class="hint">Haz clic en ✅ para excluir archivos que no quieras descargar</p>
 					<div class="file-list">
@@ -233,9 +229,9 @@
 							</mat-card-content>
 						</mat-card>
 					</div>
-				</div>
-				<!-- Acción final -->
-				<div class="step-actions final-action">
+				</div> -->
+			<!-- Acción final -->
+			<!-- <div class="step-actions final-action">
 					<button
 						mat-raised-button
 						color="accent"
@@ -244,7 +240,8 @@
 						&nbsp; Generar y descargar archivos
 					</button>
 				</div>
-			</div>
-		</mat-expansion-panel></mat-accordion
-	>
+			</div> -->
+			<!-- Fin de mat-accordion -->
+		</div>
+	</mat-accordion>
 </div>

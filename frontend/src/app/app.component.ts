@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { ApiService } from './services/api.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -32,11 +34,13 @@ import { Step1UploadComponent } from './components/steps/step1-upload/step1-uplo
 		FormsModule,
 		// Nuevo componente
 		Step1UploadComponent,
+		HttpClientModule,
 	],
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
+	constructor(private api: ApiService) {}
 	selectedFilterColumn: string = '';
 	selectedFiltersMap: Record<string, boolean> = {};
 	selectedColumnsMap: Record<string, boolean> = {};
@@ -75,12 +79,10 @@ export class AppComponent implements OnInit {
 	];
 
 	ngOnInit() {
-		// Inicializar los mapas para checkboxes
-		this.etapaValues.forEach((val: string) => {
-			this.selectedFiltersMap[val] = this.selectedFilters.includes(val);
-		});
-		this.headers.forEach((header: string) => {
-			this.selectedColumnsMap[header] = this.selectedColumns.includes(header);
+		// Llamar al backend al iniciar la app
+		this.api.pingBackend().subscribe({
+			next: (resp) => console.log('Respuesta backend:', resp),
+			error: (err) => console.error('Error backend:', err),
 		});
 	}
 

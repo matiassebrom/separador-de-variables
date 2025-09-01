@@ -12,6 +12,10 @@ export interface HeadersResponse {
 	headers: string[];
 }
 
+export interface UniqueValuesResponse {
+	unique_values_in_header_to_split: string[];
+}
+
 @Injectable({
 	providedIn: 'root',
 })
@@ -30,5 +34,9 @@ export class ApiService {
 
 	getHeaders(fileId: string): Observable<HeadersResponse> {
 		return this.http.get<HeadersResponse>(`${this.baseUrl}/get_headers/${fileId}`);
+	}
+
+	setHeaderToSplit(fileId: string, header: string) {
+		return this.http.post<UniqueValuesResponse>(`${this.baseUrl}/set_header_to_split/${fileId}`, { header });
 	}
 }

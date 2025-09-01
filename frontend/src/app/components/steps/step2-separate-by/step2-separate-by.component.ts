@@ -16,7 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ApiService } from '../../../services/api.service';
+import { ApiService, UniqueValuesResponse } from '../../../services/api.service';
 import { FileStateService } from '../../../services/file-state.service';
 
 @Component({
@@ -46,6 +46,8 @@ export class Step2SeparateByComponent implements OnInit, OnChanges {
 	headers = signal<string[]>([]);
 	isLoadingHeaders = signal(false);
 	errorMessage = signal<string>('');
+	uniqueValues = signal<string[]>([]);
+	isSaving = signal(false);
 
 	constructor(private apiService: ApiService, public fileStateService: FileStateService) {
 		// 🎯 Effect que reacciona a cambios en el file_id
@@ -118,6 +120,24 @@ export class Step2SeparateByComponent implements OnInit, OnChanges {
 	}
 
 	onContinueClick() {
-		this.nextStep.emit();
+		const fileId = this.fileStateService.fileId();
+		const header = this.selectedSeparateBy;
+		if (!fileId || !header) {
+			this.errorMessage.set('Selecciona una columna para separar');
+			return;
+		}
+		this.isSaving.set(true);
+		this.apiService.setHeaderToSplit(fileId, header).subscribe({
+			next: (response: UniqueValuesResponse) => {
+				this.uniqueValues.set(response.unique_values_in_header_to_split);
+				this.isSaving.set(false);
+				this.nextStep.emit();
+			},
+			error: (error) => {
+				this.isSaving.set(false);
+				this.errorMessage.set('Error al guardar el header de separación');
+				console.error('Error al hacer set_header_to_split:', error);
+			},
+		});
 	}
 }

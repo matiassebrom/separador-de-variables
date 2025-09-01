@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 // Importar los nuevos componentes
 import { Step1UploadComponent } from './components/steps/step1-upload/step1-upload.component';
 import { Step2SeparateByComponent } from './components/steps/step2-separate-by/step2-separate-by.component';
+import { Step3FiltersComponent } from './components/steps/step3-filters/step3-filters.component';
 
 @Component({
 	selector: 'app-root',
@@ -35,6 +36,7 @@ import { Step2SeparateByComponent } from './components/steps/step2-separate-by/s
 		// Nuevos componentes
 		Step1UploadComponent,
 		Step2SeparateByComponent,
+		Step3FiltersComponent,
 	],
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.scss',

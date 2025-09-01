@@ -1,0 +1,23 @@
+.step-content {
+  padding: 1.5rem;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.filter-values {
+  margin: 1rem 0;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.current-filters {
+  margin: 1rem 0;
+}

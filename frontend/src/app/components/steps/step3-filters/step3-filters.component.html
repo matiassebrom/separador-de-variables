@@ -1,0 +1,52 @@
+<mat-expansion-panel
+  [expanded]="isStepCurrent"
+  [disabled]="!canAccessStep">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>{{
+        isStepCompleted
+          ? 'check_circle'
+          : isStepCurrent
+          ? 'radio_button_checked'
+          : 'radio_button_unchecked'
+      }}</mat-icon>
+      &nbsp; 3) Configurar filtros (opcional)
+    </mat-panel-title>
+    <mat-panel-description *ngIf="selectedFilters.length > 0">
+      ETAPA: {{ selectedFilters.join(', ') }}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <div class="step-content">
+    <p>Podés agregar filtros para incluir/excluir datos. Es opcional.</p>
+    <mat-form-field appearance="outline" class="mat-form-field-fluid">
+      <mat-label>Columna a filtrar</mat-label>
+      <mat-select [ngModel]="selectedFilterColumn" (ngModelChange)="filterColumnChange.emit($event)">
+        <mat-option value="">( ninguna )</mat-option>
+        <mat-option *ngFor="let header of headers" [value]="header">
+          {{ header }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="filter-values">
+      <p><strong>Valores permitidos (ETAPA):</strong></p>
+      <div class="checkbox-group">
+        <mat-checkbox
+          *ngFor="let value of etapaValues"
+          [ngModel]="selectedFiltersMap[value]"
+          (ngModelChange)="filterCheckboxChange.emit({value: value, checked: $event})">
+          {{ value }}
+        </mat-checkbox>
+      </div>
+    </div>
+    <div class="current-filters" *ngIf="selectedFilters.length > 0">
+      <p><strong>Filtros actuales:</strong></p>
+      <mat-chip-listbox>
+        <mat-chip>ETAPA: {{ selectedFilters.join(', ') }}</mat-chip>
+      </mat-chip-listbox>
+    </div>
+    <div class="step-actions">
+      <button mat-button (click)="clearFilters.emit()">Limpiar filtros</button>
+      <button mat-raised-button color="primary" (click)="nextStep.emit()">Continuar</button>
+    </div>
+  </div>
+</mat-expansion-panel>

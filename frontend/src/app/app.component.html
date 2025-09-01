@@ -25,69 +25,20 @@
 		</app-step2-separate-by>
 
 		<!-- ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ==================== -->
-		<!-- <mat-expansion-panel
-			[expanded]="isStepCurrent(3)"
-			[disabled]="!canAccessStep(3)">
-			<mat-expansion-panel-header>
-				<mat-panel-title>
-					<mat-icon>{{
-						isStepCompleted(3)
-							? 'check_circle'
-							: isStepCurrent(3)
-							? 'radio_button_checked'
-							: 'radio_button_unchecked'
-					}}</mat-icon>
-					&nbsp; 3) Configurar filtros (opcional)
-				</mat-panel-title>
-				<mat-panel-description *ngIf="selectedFilters.length > 0">
-					ETAPA: {{ selectedFilters.join(', ') }}
-				</mat-panel-description>
-			</mat-expansion-panel-header>
-			<div class="step-content">
-				<p>Podés agregar filtros para incluir/excluir datos. Es opcional.</p>
-				<mat-form-field
-					appearance="outline"
-					class="full-width">
-					<mat-label>Columna a filtrar</mat-label>
-					<mat-select [(ngModel)]="selectedFilterColumn">
-						<mat-option value="">( ninguna )</mat-option>
-						<mat-option
-							*ngFor="let header of headers"
-							[value]="header">
-							{{ header }}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-				<div class="filter-values">
-					<p><strong>Valores permitidos (ETAPA):</strong></p>
-					<div class="checkbox-group">
-						<mat-checkbox
-							*ngFor="let value of etapaValues"
-							[(ngModel)]="selectedFiltersMap[value]"
-							(ngModelChange)="onFilterCheckboxModelChange(value, $event)">
-							{{ value }}
-						</mat-checkbox>
-					</div>
-				</div>
-				<div
-					class="current-filters"
-					*ngIf="selectedFilters.length > 0">
-					<p><strong>Filtros actuales:</strong></p>
-					<mat-chip-listbox>
-						<mat-chip>ETAPA: {{ selectedFilters.join(', ') }}</mat-chip>
-					</mat-chip-listbox>
-				</div>
-				<div class="step-actions">
-					<button mat-button>Limpiar filtros</button>
-					<button
-						mat-raised-button
-						color="primary"
-						(click)="nextStep()">
-						Continuar
-					</button>
-				</div>
-			</div>
-		</mat-expansion-panel> -->
+		<app-step3-filters
+			[isStepCurrent]="isStepCurrent(3)"
+			[canAccessStep]="canAccessStep(3)"
+			[isStepCompleted]="isStepCompleted(3)"
+			[selectedFilterColumn]="selectedFilterColumn"
+			[selectedFiltersMap]="selectedFiltersMap"
+			[selectedFilters]="selectedFilters"
+			[etapaValues]="etapaValues"
+			[headers]="headers"
+			(filterColumnChange)="selectedFilterColumn = $event"
+			(filterCheckboxChange)="onFilterCheckboxModelChange($event.value, $event.checked)"
+			(clearFilters)="selectedFilters = []; selectedFiltersMap = {}"
+			(nextStep)="nextStep()">
+		</app-step3-filters>
 
 		<!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
 		<!-- <mat-expansion-panel

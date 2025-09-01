@@ -10,33 +10,33 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
-  selector: 'app-step3-filters',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatChipsModule
-  ],
-  templateUrl: './step3-filters.component.html',
-  styleUrl: './step3-filters.component.scss'
+	selector: 'app-step3-filters',
+	standalone: true,
+	imports: [
+		CommonModule,
+		FormsModule,
+		MatExpansionModule,
+		MatFormFieldModule,
+		MatSelectModule,
+		MatButtonModule,
+		MatIconModule,
+		MatCheckboxModule,
+		MatChipsModule,
+	],
+	templateUrl: './step3-filters.component.html',
+	styleUrl: './step3-filters.component.scss',
 })
 export class Step3FiltersComponent {
-  @Input() isStepCurrent = false;
-  @Input() canAccessStep = false;
-  @Input() isStepCompleted = false;
-  @Input() selectedFilterColumn = '';
-  @Input() selectedFiltersMap: Record<string, boolean> = {};
-  @Input() selectedFilters: string[] = [];
-  @Input() etapaValues: string[] = [];
-  @Input() headers: string[] = [];
-  @Output() filterColumnChange = new EventEmitter<string>();
-  @Output() filterCheckboxChange = new EventEmitter<{value: string, checked: boolean}>();
-  @Output() clearFilters = new EventEmitter<void>();
-  @Output() nextStep = new EventEmitter<void>();
+	@Input() isStepCurrent = false;
+	@Input() canAccessStep = false;
+	@Input() isStepCompleted = false;
+	@Input() selectedFilterColumn = '';
+	@Input() selectedFiltersMap: Record<string, boolean> = {};
+	@Input() selectedFilters: string[] = [];
+	@Input() etapaValues: string[] = [];
+	@Input() headers: string[] = [];
+	@Output() filterColumnChange = new EventEmitter<string>();
+	@Output() filterCheckboxChange = new EventEmitter<{ value: string; checked: boolean }>();
+	@Output() clearFilters = new EventEmitter<void>();
+	@Output() nextStep = new EventEmitter<void>();
 }

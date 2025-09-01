@@ -20,7 +20,11 @@
 							<mat-spinner diameter="40"></mat-spinner>
 							<p class="mat-body-1">Subiendo archivo...</p>
 							} @else {
-							<mat-icon class="upload-icon" color="primary">cloud_upload</mat-icon>
+							<mat-icon
+								class="upload-icon"
+								color="primary"
+								>cloud_upload</mat-icon
+							>
 							<p class="mat-body-1 mat-muted">Arrastra tu archivo Excel aquí</p>
 							}
 
@@ -83,12 +87,20 @@
 		<mat-card *ngIf="fileUploaded">
 			<mat-card-content>
 				<div class="success-message">
-					<mat-icon color="primary" class="success-icon">check_circle</mat-icon>
+					<mat-icon
+						color="primary"
+						class="success-icon"
+						>check_circle</mat-icon
+					>
 					<div>
-						<p class="mat-body-1"><strong>Archivo:</strong> {{ fileStateService.filename() || 'excel para test.xlsx' }}</p>
+						<p class="mat-body-1">
+							<strong>Archivo:</strong> {{ fileStateService.filename() || 'excel para test.xlsx' }}
+						</p>
 						<p class="mat-body-1"><strong>File ID:</strong> {{ fileStateService.fileId() }}</p>
 						<p class="mat-body-1"><strong>Estado:</strong> ✅ Cargado exitosamente</p>
-						<p class="mat-body-2">¡El archivo se cargó correctamente! Ahora puedes continuar con el siguiente paso.</p>
+						<p class="mat-body-2">
+							¡El archivo se cargó correctamente! Ahora puedes continuar con el siguiente paso.
+						</p>
 					</div>
 				</div>
 			</mat-card-content>

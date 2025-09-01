@@ -136,11 +136,11 @@ export class AppComponent implements OnInit {
 		this.fileUploaded = true;
 		this.nextStep();
 	}
-	
+
 	onSeparateBySelected(value: string) {
 		this.selectedSeparateBy = value;
 	}
-	
+
 	toggleFileExclusion(index: number) {
 		this.previewFiles[index].excluded = !this.previewFiles[index].excluded;
 	}

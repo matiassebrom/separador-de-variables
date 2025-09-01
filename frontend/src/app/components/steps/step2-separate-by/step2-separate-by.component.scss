@@ -1,24 +1,24 @@
 .step-content {
-  padding: 1.5rem;
+	padding: 1.5rem;
 }
 
 .step-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1.5rem;
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 1.5rem;
 }
 
 // Estados usando clases de Material
 .loading-state,
 .error-state,
 .info-state {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1rem;
+	margin-bottom: 1rem;
 }
 
 .error-state button {
-  margin-left: auto;
+	margin-left: auto;
 }

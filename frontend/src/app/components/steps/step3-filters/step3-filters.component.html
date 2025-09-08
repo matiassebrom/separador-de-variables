@@ -13,41 +13,54 @@
 		</mat-panel-description>
 	</mat-expansion-panel-header>
 	<div class="step-content">
-		<p>Podés agregar filtros para incluir/excluir datos. Es opcional.</p>
+		<p>Podés agregar filtros para incluir/excluir que datos vas a exportar. Es opcional.</p>
 		<mat-form-field
 			appearance="outline"
 			class="mat-form-field-fluid">
-			<mat-label>Columna a filtrar</mat-label>
+			<mat-label>Columna a filtrar </mat-label>
 			<mat-select
 				[ngModel]="selectedFilterColumn"
 				(ngModelChange)="filterColumnChange.emit($event)">
+				<mat-option>
+					<input
+						matInput
+						placeholder="Buscar columna..."
+						[(ngModel)]="headerSearchTerm"
+						(click)="$event.stopPropagation()"
+						(keydown)="$event.stopPropagation()"
+						style="width: 100%" />
+				</mat-option>
 				<mat-option value="">( ninguna )</mat-option>
 				<mat-option
-					*ngFor="let header of headers"
+					*ngFor="let header of filteredHeaders"
 					[value]="header">
 					{{ header }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
-		<div class="filter-values">
-			<p><strong>Valores permitidos (ETAPA):</strong></p>
-			<div class="checkbox-group">
-				<mat-checkbox
-					*ngFor="let value of etapaValues"
-					[ngModel]="selectedFiltersMap[value]"
-					(ngModelChange)="filterCheckboxChange.emit({ value: value, checked: $event })">
+
+		<mat-form-field
+			appearance="outline"
+			class="mat-form-field-fluid">
+			<mat-label>Valores permitidos (columna)</mat-label>
+			<mat-select multiple>
+				<mat-option
+					*ngFor="let value of columnValues"
+					(click)="toggleColumnValue(value)">
 					{{ value }}
-				</mat-checkbox>
-			</div>
-		</div>
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
 		<div
 			class="current-filters"
 			*ngIf="selectedFilters.length > 0">
 			<p><strong>Filtros actuales:</strong></p>
 			<mat-chip-listbox>
-				<mat-chip>ETAPA: {{ selectedFilters.join(', ') }}</mat-chip>
+				<mat-chip>ETAPA: {{ selectedColumnValues.join(', ') }}</mat-chip>
 			</mat-chip-listbox>
 		</div>
+
 		<div class="step-actions">
 			<button
 				mat-button

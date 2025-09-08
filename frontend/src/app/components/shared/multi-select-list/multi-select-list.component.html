@@ -1,0 +1,10 @@
+<div class="multi-select-list-container">
+	<div class="multi-select-list-scroll">
+		<mat-checkbox
+			*ngFor="let value of uniqueValues"
+			[checked]="selectedUniqueValues.includes(value)"
+			(change)="onToggle(value, $event.checked)">
+			{{ value }}
+		</mat-checkbox>
+	</div>
+</div>

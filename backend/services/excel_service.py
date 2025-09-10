@@ -58,7 +58,7 @@ def get_unique_values_by_header(file_id: str, header: str):
     return unique_values
 
 
-def set_headers_to_keep(file_id: str, headers: list[str]) -> list[str]:
+def set_headers_to_keep(file_id: str, headers: list[str]) -> list:
     if file_id not in file_store:
         raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
     all_headers = get_headers_by_id(file_id)
@@ -66,7 +66,10 @@ def set_headers_to_keep(file_id: str, headers: list[str]) -> list[str]:
         if h not in all_headers:
             raise HTTPException(status_code=400, detail=f"Header '{h}' no está en la lista de headers")
     file_store[file_id]["headers_to_keep"] = headers
-    return headers
+    # Si hay al menos un header, devolver los valores únicos del primero
+    if headers:
+        return get_unique_values_by_header(file_id, headers[0])
+    return []
 
 def set_values_to_keep_by_header(file_id: str, header: str, values: list) -> list:
     if file_id not in file_store:

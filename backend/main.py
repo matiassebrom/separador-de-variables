@@ -70,10 +70,10 @@ def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueVa
     unique_values_in_header_to_split = set_header_to_split_service(file_id, body.header)
     return UniqueValuesResponse(unique_values_in_header_to_split=unique_values_in_header_to_split)
 
-@app.post("/set_headers_to_keep/{file_id}", response_model=HeadersResponse)
-def set_headers_to_keep(file_id: str, headers: HeadersResponse = Body(...)) -> HeadersResponse:
-    set_headers_to_keep_service(file_id, headers.headers)
-    return HeadersResponse(headers=headers.headers)
+@app.post("/set_headers_to_keep/{file_id}")
+def set_headers_to_keep(file_id: str, headers: HeadersResponse = Body(...)):
+    unique_values = set_headers_to_keep_service(file_id, headers.headers)
+    return {"unique_values": unique_values}
 
 @app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)
 def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> ValuesToKeepByHeader:

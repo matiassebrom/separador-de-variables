@@ -20,7 +20,7 @@
 			<mat-label>Columna a filtrar </mat-label>
 			<mat-select
 				[ngModel]="selectedFilterColumn"
-				(ngModelChange)="filterColumnChange.emit($event)">
+				(ngModelChange)="onFilterColumnChange($event)">
 				<mat-option>
 					<input
 						matInput

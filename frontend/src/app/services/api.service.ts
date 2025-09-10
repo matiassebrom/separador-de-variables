@@ -16,6 +16,12 @@ export interface UniqueValuesResponse {
 	unique_values_in_header_to_split: string[];
 }
 
+// Nueva interfaz para la respuesta del endpoint set_headers_to_keep
+export interface SetHeadersToKeepResponse {
+	headers: string[];
+	unique_values: string[];
+}
+
 @Injectable({
 	providedIn: 'root',
 })
@@ -38,5 +44,15 @@ export class ApiService {
 
 	setHeaderToSplit(fileId: string, header: string) {
 		return this.http.post<UniqueValuesResponse>(`${this.baseUrl}/set_header_to_split/${fileId}`, { header });
+	}
+
+	/**
+	 * Llama al endpoint para establecer los headers a mantener
+	 * @param fileId string
+	 * @param headers string[]
+	 */
+	setHeadersToKeep(fileId: string, headers: string[]): Observable<SetHeadersToKeepResponse> {
+		const body = { headers };
+		return this.http.post<SetHeadersToKeepResponse>(`${this.baseUrl}/set_headers_to_keep/${fileId}`, body);
 	}
 }

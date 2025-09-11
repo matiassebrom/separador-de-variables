@@ -6,6 +6,17 @@ export interface UploadFileResponse {
 	file_id: string;
 	filename: string;
 	message: string;
+
+}
+
+export interface ValuesToKeepByHeaderRequest {
+	header: string;
+	values: string[];
+}
+
+export interface ValuesToKeepByHeaderResponse {
+	header: string;
+	values: string[];
 }
 
 export interface HeadersResponse {
@@ -35,7 +46,7 @@ export class ApiService {
 	}
 
 	uploadExcel(formData: FormData): Observable<UploadFileResponse> {
-		return this.http.post<UploadFileResponse>(`${this.baseUrl}/upload_file`, formData);
+			return this.http.post<UploadFileResponse>(`${this.baseUrl}/upload_file`, formData);
 	}
 
 	getHeaders(fileId: string): Observable<HeadersResponse> {
@@ -51,8 +62,17 @@ export class ApiService {
 	 * @param fileId string
 	 * @param headers string[]
 	 */
-	setHeadersToKeep(fileId: string, headers: string[]): Observable<SetHeadersToKeepResponse> {
-		const body = { headers };
-		return this.http.post<SetHeadersToKeepResponse>(`${this.baseUrl}/set_headers_to_keep/${fileId}`, body);
+		setHeadersToKeep(fileId: string, headers: string[]): Observable<SetHeadersToKeepResponse> {
+			const body = { headers };
+			return this.http.post<SetHeadersToKeepResponse>(`${this.baseUrl}/set_headers_to_keep/${fileId}`, body);
+		}
+
+
+	setValuesToKeepByHeader(fileId: string, header: string, values: string[]): Observable<ValuesToKeepByHeaderResponse> {
+		const body = { header, values };
+		return this.http.post<ValuesToKeepByHeaderResponse>(`${this.baseUrl}/set_values_to_keep_by_header/${fileId}`, body);
 	}
-}
+
+
+	}
+

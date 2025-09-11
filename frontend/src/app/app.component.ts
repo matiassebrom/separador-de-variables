@@ -36,10 +36,10 @@ import { Step3FiltersComponent } from './components/steps/step3-filters/step3-fi
 		// Nuevos componentes
 		Step1UploadComponent,
 		Step2SeparateByComponent,
-		Step3FiltersComponent,
+		Step3FiltersComponent
 	],
 	templateUrl: './app.component.html',
-	styleUrl: './app.component.scss',
+	styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
 	constructor(private api: ApiService) {}
@@ -70,21 +70,21 @@ export class AppComponent implements OnInit {
 		'FILTRO',
 		'CUOTAFULL',
 		'F11-EMPRESARIAL',
-		'suma_eval',
+		'suma_eval'
 	];
 	etapaValues = ['Activos', 'Inactivos', 'Pendientes'];
 	selectedFilters = ['Activos', 'Inactivos'];
 	previewFiles = [
 		{ name: 'datos_separados - ORIGEN - WEB.xlsx', excluded: false },
 		{ name: 'datos_separados - ORIGEN - MOBILE.xlsx', excluded: false },
-		{ name: 'datos_separados - ORIGEN - EMAIL.xlsx', excluded: true },
+		{ name: 'datos_separados - ORIGEN - EMAIL.xlsx', excluded: true }
 	];
 
 	ngOnInit() {
 		// Llamar al backend al iniciar la app
 		this.api.pingBackend().subscribe({
 			next: (resp) => console.log('Respuesta backend:', resp),
-			error: (err) => console.error('Error backend:', err),
+			error: (err) => console.error('Error backend:', err)
 		});
 	}
 

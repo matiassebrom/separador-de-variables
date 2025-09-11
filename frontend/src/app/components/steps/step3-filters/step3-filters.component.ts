@@ -11,7 +11,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 
-
 @Component({
 	selector: 'app-step3-filters',
 	standalone: true,
@@ -24,10 +23,10 @@ import { MatChipsModule } from '@angular/material/chips';
 		MatButtonModule,
 		MatIconModule,
 		MatCheckboxModule,
-		MatChipsModule,
+		MatChipsModule
 	],
 	templateUrl: './step3-filters.component.html',
-	styleUrl: './step3-filters.component.scss',
+	styleUrl: './step3-filters.component.scss'
 })
 export class Step3FiltersComponent implements OnInit {
 	@Input() isStepCurrent = false;
@@ -52,34 +51,55 @@ export class Step3FiltersComponent implements OnInit {
 	selectedColumnValues: string[] = [];
 	headerSearchTerm: string = '';
 
-	constructor(private api: ApiService, public fileStateService: FileStateService) {}
-
-		get filteredHeaders(): string[] {
-			if (!this.headerSearchTerm) return this.headers;
-			return (this.headers || []).filter(
-				(h: string) => h && h.toLowerCase().includes(this.headerSearchTerm.toLowerCase()),
-			);
-		}
-
-		onFilterColumnChange(header: string) {
-			this.filterColumnChange.emit(header);
-			const fileId = this.fileStateService.getCurrentFileId();
-			// Llamar al backend solo si hay fileId y header seleccionado
-			if (fileId && header) {
-				this.api.setHeadersToKeep(fileId, [header]).subscribe({
-					next: (resp) => {
-						console.log('Valores únicos recibidos:', resp.unique_values);
-					},
-					error: (err) => {
-						console.error('Error setHeadersToKeep:', err);
-					}
-				});
-			}
-		}
+	constructor(
+		private api: ApiService,
+		public fileStateService: FileStateService
+	) {}
 
 	ngOnInit() {
 		// Inicializar el estado local con los valores recibidos (si los hay)
 		this.selectedUniqueValuesLocal = [...this.selectedUniqueValues];
+	}
+
+	get filteredHeaders(): string[] {
+		if (!this.headerSearchTerm) return this.headers;
+		return (this.headers || []).filter(
+			(h: string) => h && h.toLowerCase().includes(this.headerSearchTerm.toLowerCase())
+		);
+	}
+
+	onFilterColumnChange(header: string) {
+		this.filterColumnChange.emit(header);
+		const fileId = this.fileStateService.getCurrentFileId();
+		// Llamar al backend solo si hay fileId y header seleccionado
+		if (fileId && header) {
+			this.api.setHeadersToKeep(fileId, [header]).subscribe({
+				next: (resp) => {
+					this.columnValues = resp.unique_values;
+					console.log('Valores únicos recibidos:', resp.unique_values);
+				},
+				error: (err) => {
+					console.error('Error setHeadersToKeep:', err);
+				}
+			});
+		}
+	}
+
+	onContinue() {
+		const fileId = this.fileStateService.getCurrentFileId();
+		if (fileId && this.selectedFilterColumn && this.selectedColumnValues.length > 0) {
+			this.api.setValuesToKeepByHeader(fileId, this.selectedFilterColumn, this.selectedColumnValues).subscribe({
+				next: (resp) => {
+					console.log('Valores enviados y guardados:', resp);
+					this.nextStep.emit();
+				},
+				error: (err) => {
+					console.error('Error setValuesToKeepByHeader:', err);
+				}
+			});
+		} else {
+			this.nextStep.emit();
+		}
 	}
 
 	get filteredUniqueValues() {

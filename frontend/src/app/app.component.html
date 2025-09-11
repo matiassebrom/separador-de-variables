@@ -9,10 +9,7 @@
 
 	<mat-accordion class="steps-accordion">
 		<!-- ==================== PASO 1: SUBIR ARCHIVO ==================== -->
-		<app-step1-upload
-			[fileUploaded]="fileUploaded"
-			(fileUpload)="onFileUpload()">
-		</app-step1-upload>
+		<app-step1-upload [fileUploaded]="fileUploaded" (fileUpload)="onFileUpload()"> </app-step1-upload>
 
 		<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
 		<app-step2-separate-by
@@ -21,7 +18,8 @@
 			[isStepCompleted]="isStepCompleted(2)"
 			[selectedSeparateBy]="selectedSeparateBy"
 			(separateBySelected)="onSeparateBySelected($event)"
-			(nextStep)="nextStep()">
+			(nextStep)="nextStep()"
+		>
 		</app-step2-separate-by>
 
 		<!-- ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ==================== -->
@@ -37,48 +35,22 @@
 			(filterColumnChange)="selectedFilterColumn = $event"
 			(filterCheckboxChange)="onFilterCheckboxModelChange($event.value, $event.checked)"
 			(clearFilters)="selectedFilters = []; selectedFiltersMap = {}"
-			(nextStep)="nextStep()">
+			(nextStep)="nextStep()"
+		>
 		</app-step3-filters>
 
-		<!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
-		<!-- <mat-expansion-panel
-			[expanded]="isStepCurrent(4)"
-			[disabled]="!canAccessStep(4)">
-			<mat-expansion-panel-header>
-				<mat-panel-title>
-					<mat-icon>{{
-						isStepCompleted(4)
-							? 'check_circle'
-							: isStepCurrent(4)
-							? 'radio_button_checked'
-							: 'radio_button_unchecked'
-					}}</mat-icon>
-					&nbsp; 4) Elegir 'Datos a guardar'
-				</mat-panel-title>
-				<mat-panel-description *ngIf="selectedColumns.length > 0">
-					{{ selectedColumns.length }} columnas seleccionadas
-				</mat-panel-description>
-			</mat-expansion-panel-header>
-			<div class="step-content">
-				<p><strong>Selecciona las columnas que quieres incluir en los archivos generados:</strong></p>
-				<div class="columns-grid">
-					<mat-checkbox
-						*ngFor="let header of headers"
-						[(ngModel)]="selectedColumnsMap[header]"
-						(ngModelChange)="onColumnCheckboxModelChange(header, $event)">
-						{{ header }}
-					</mat-checkbox>
-				</div>
-				<div class="step-actions">
-					<button
-						mat-raised-button
-						color="primary"
-						(click)="nextStep()">
-						Continuar
-					</button>
-				</div>
-			</div>
-		</mat-expansion-panel> -->
+		   <!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
+		   <app-step4-choose-columns
+			   [isStepCurrent]="isStepCurrent(4)"
+			   [canAccessStep]="canAccessStep(4)"
+			   [isStepCompleted]="isStepCompleted(4)"
+			   [headers]="headers"
+			   [selectedColumnsMap]="selectedColumnsMap"
+			   [selectedColumns]="selectedColumns"
+			   (columnCheckboxChange)="onColumnCheckboxModelChange($event.header, $event.checked)"
+			   (nextStep)="nextStep()"
+		   >
+		   </app-step4-choose-columns>
 
 		<!-- ==================== PASO 5: NOMBRE BASE Y DESCARGAR ==================== -->
 		<!-- <mat-expansion-panel

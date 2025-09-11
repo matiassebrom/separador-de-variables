@@ -1,6 +1,4 @@
-<mat-expansion-panel
-	[expanded]="isStepCurrent"
-	[disabled]="!canAccessStep">
+<mat-expansion-panel [expanded]="isStepCurrent" [disabled]="!canAccessStep">
 	<mat-expansion-panel-header>
 		<mat-panel-title>
 			<mat-icon>{{
@@ -13,23 +11,16 @@
 
 	<div class="step-content">
 		<!-- 🔄 Estado de carga de headers -->
-		<div
-			*ngIf="isLoadingHeaders()"
-			class="loading-state mat-body-1">
+		<div *ngIf="isLoadingHeaders()" class="loading-state mat-body-1">
 			<mat-icon color="primary">refresh</mat-icon>
 			<span>Cargando columnas del archivo...</span>
 		</div>
 
 		<!-- ❌ Estado de error -->
-		<div
-			*ngIf="errorMessage()"
-			class="error-state mat-body-1">
+		<div *ngIf="errorMessage()" class="error-state mat-body-1">
 			<mat-icon color="warn">error</mat-icon>
 			<span>{{ errorMessage() }}</span>
-			<button
-				mat-stroked-button
-				color="primary"
-				(click)="loadHeaders()">
+			<button mat-stroked-button color="primary" (click)="loadHeaders()">
 				<mat-icon>refresh</mat-icon>
 				Reintentar
 			</button>
@@ -37,36 +28,24 @@
 
 		<!-- ✅ Selector de columna -->
 		<div *ngIf="!isLoadingHeaders() && !errorMessage() && headers().length > 0">
-			<mat-form-field
-				appearance="outline"
-				class="mat-form-field-fluid">
+			<mat-form-field appearance="outline" class="mat-form-field-fluid">
 				<mat-label>Separar por (columna)</mat-label>
-				<mat-select
-					[value]="selectedSeparateBy"
-					(selectionChange)="onSeparateByChange($event.value)">
-					<mat-option
-						*ngFor="let header of headers()"
-						[value]="header">
+				<mat-select [value]="selectedSeparateBy" (selectionChange)="onSeparateByChange($event.value)">
+					<mat-option *ngFor="let header of headers()" [value]="header">
 						{{ header }}
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
 
 			<div class="step-actions">
-				<button
-					mat-raised-button
-					color="primary"
-					[disabled]="!selectedSeparateBy"
-					(click)="onContinueClick()">
+				<button mat-raised-button color="primary" [disabled]="!selectedSeparateBy" (click)="onContinueClick()">
 					Continuar
 				</button>
 			</div>
 		</div>
 
 		<!-- 📝 Información adicional -->
-		<div
-			*ngIf="!fileStateService.hasFile()"
-			class="info-state mat-body-1">
+		<div *ngIf="!fileStateService.hasFile()" class="info-state mat-body-1">
 			<mat-icon color="accent">info</mat-icon>
 			<span>Primero debes subir un archivo en el paso anterior</span>
 		</div>

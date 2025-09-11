@@ -7,7 +7,7 @@ import {
 	OnChanges,
 	SimpleChanges,
 	signal,
-	effect,
+	effect
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -29,18 +29,18 @@ import { FileStateService } from '../../../services/file-state.service';
 		MatFormFieldModule,
 		MatSelectModule,
 		MatButtonModule,
-		MatIconModule,
+		MatIconModule
 	],
 	templateUrl: './step2-separate-by.component.html',
-	styleUrl: './step2-separate-by.component.scss',
+	styleUrl: './step2-separate-by.component.scss'
 })
-export class Step2SeparateByComponent implements OnInit, OnChanges {
+export class Step2SeparateByComponent implements OnChanges {
 	@Input() isStepCurrent = false;
 	@Input() canAccessStep = false;
 	@Input() isStepCompleted = false;
-	@Input() selectedSeparateBy = '';
-	@Output() separateBySelected = new EventEmitter<string>();
+
 	@Output() nextStep = new EventEmitter<void>();
+	selectedSeparateBy = '';
 
 	// 🎯 Signals para estado reactivo
 	headers = signal<string[]>([]);
@@ -49,7 +49,10 @@ export class Step2SeparateByComponent implements OnInit, OnChanges {
 	uniqueValues = signal<string[]>([]);
 	isSaving = signal(false);
 
-	constructor(private apiService: ApiService, public fileStateService: FileStateService) {
+	constructor(
+		private apiService: ApiService,
+		public fileStateService: FileStateService
+	) {
 		// 🎯 Effect que reacciona a cambios en el file_id
 		effect(() => {
 			const fileId = this.fileStateService.fileId();
@@ -65,11 +68,6 @@ export class Step2SeparateByComponent implements OnInit, OnChanges {
 				this.loadHeaders();
 			}
 		});
-	}
-
-	ngOnInit() {
-		// El effect se encarga de la carga reactiva
-		// No necesitamos lógica manual aquí
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -111,12 +109,12 @@ export class Step2SeparateByComponent implements OnInit, OnChanges {
 				console.error('❌ Error al cargar headers:', error);
 				this.errorMessage.set('Error al cargar las columnas del archivo');
 				this.isLoadingHeaders.set(false);
-			},
+			}
 		});
 	}
 
 	onSeparateByChange(value: string) {
-		this.separateBySelected.emit(value);
+		this.selectedSeparateBy = value;
 	}
 
 	onContinueClick() {
@@ -137,7 +135,7 @@ export class Step2SeparateByComponent implements OnInit, OnChanges {
 				this.isSaving.set(false);
 				this.errorMessage.set('Error al guardar el header de separación');
 				console.error('Error al hacer set_header_to_split:', error);
-			},
+			}
 		});
 	}
 }

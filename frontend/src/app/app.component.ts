@@ -55,25 +55,6 @@ export class AppComponent implements OnInit {
 
 	// <todo esto esta harcodeado para hacer pruebas
 
-	selectedSeparateBy = 'ORIGEN';
-	selectedColumns = ['ORIGEN', 'ETAPA', 'ID', 'TIPO'];
-	baseName = 'datos_separados';
-	headers = [
-		'StartDate',
-		'RecordedDate',
-		'ResponseId',
-		'ORIGEN',
-		'Q_TerminateFlag',
-		'ETAPA',
-		'ID',
-		'TIPO',
-		'EDAD',
-		'EDAD_COD',
-		'FILTRO',
-		'CUOTAFULL',
-		'F11-EMPRESARIAL',
-		'suma_eval'
-	];
 	etapaValues = ['Activos', 'Inactivos', 'Pendientes'];
 	selectedFilters = ['Activos', 'Inactivos'];
 	previewFiles = [
@@ -103,19 +84,6 @@ export class AppComponent implements OnInit {
 		}
 	}
 
-	onColumnCheckboxModelChange(header: string, checked: boolean) {
-		if (checked) {
-			if (!this.selectedColumns.includes(header)) {
-				this.selectedColumns.push(header);
-			}
-		} else {
-			const idx = this.selectedColumns.indexOf(header);
-			if (idx > -1) {
-				this.selectedColumns.splice(idx, 1);
-			}
-		}
-	}
-
 	get includedPreviewFiles() {
 		return this.previewFiles.filter((f) => !f.excluded);
 	}
@@ -137,10 +105,6 @@ export class AppComponent implements OnInit {
 	onFileUpload() {
 		this.fileUploaded = true;
 		this.nextStep();
-	}
-
-	onSeparateBySelected(value: string) {
-		this.selectedSeparateBy = value;
 	}
 
 	toggleFileExclusion(index: number) {

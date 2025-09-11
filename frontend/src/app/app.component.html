@@ -16,8 +16,6 @@
 			[isStepCurrent]="isStepCurrent(2)"
 			[canAccessStep]="canAccessStep(2)"
 			[isStepCompleted]="isStepCompleted(2)"
-			[selectedSeparateBy]="selectedSeparateBy"
-			(separateBySelected)="onSeparateBySelected($event)"
 			(nextStep)="nextStep()"
 		>
 		</app-step2-separate-by>
@@ -31,7 +29,6 @@
 			[selectedFiltersMap]="selectedFiltersMap"
 			[selectedFilters]="selectedFilters"
 			[etapaValues]="etapaValues"
-			[headers]="headers"
 			(filterColumnChange)="selectedFilterColumn = $event"
 			(filterCheckboxChange)="onFilterCheckboxModelChange($event.value, $event.checked)"
 			(clearFilters)="selectedFilters = []; selectedFiltersMap = {}"
@@ -44,10 +41,6 @@
 			[isStepCurrent]="isStepCurrent(4)"
 			[canAccessStep]="canAccessStep(4)"
 			[isStepCompleted]="isStepCompleted(4)"
-			[headers]="headers"
-			[selectedColumnsMap]="selectedColumnsMap"
-			[selectedColumns]="selectedColumns"
-			(columnCheckboxChange)="onColumnCheckboxModelChange($event.header, $event.checked)"
 			(nextStep)="nextStep()"
 		>
 		</app-step4-choose-columns>
@@ -55,10 +48,6 @@
 			[isStepCurrent]="true"
 			[canAccessStep]="true"
 			[isStepCompleted]="true"
-			[headers]="headers"
-			[selectedColumnsMap]="selectedColumnsMap"
-			[selectedColumns]="selectedColumns"
-			(columnCheckboxChange)="onColumnCheckboxModelChange($event.header, $event.checked)"
 			(nextStep)="nextStep()"
 		>
 		</app-step4-choose-columns>

@@ -12,15 +12,32 @@
 	</mat-expansion-panel-header>
 	<div class="step-content">
 		<p><strong>Selecciona las columnas que quieres incluir en los archivos generados:</strong></p>
-		<div class="columns-grid">
-			<mat-checkbox
-				*ngFor="let header of headers"
-				[(ngModel)]="selectedColumnsMap[header]"
-				(ngModelChange)="onCheckboxChange(header, $event)"
-			>
-				{{ header }}
-			</mat-checkbox>
+		<mat-form-field appearance="outline" class="mat-form-field-fluid">
+			<mat-label>Buscar columna</mat-label>
+			<mat-select multiple>
+				<mat-option>
+					<input
+						matInput
+						placeholder="Buscar columna..."
+						[(ngModel)]="headerSearchTerm"
+						(click)="$event.stopPropagation()"
+						(keydown)="$event.stopPropagation()"
+						style="width: 100%"
+					/>
+				</mat-option>
+				<mat-option *ngFor="let header of filteredHeaders" [value]="header" (click)="toggleColumn(header)">
+					{{ header }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<div class="current-filters" *ngIf="selectedColumns && selectedColumns.length > 0">
+			<p><strong>Columnas seleccionadas:</strong></p>
+			<mat-chip-listbox>
+				<mat-chip *ngFor="let col of selectedColumns">{{ col }}</mat-chip>
+			</mat-chip-listbox>
 		</div>
+
 		<div class="step-actions">
 			<button mat-raised-button color="primary" (click)="onContinue()">Continuar</button>
 		</div>

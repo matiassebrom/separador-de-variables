@@ -1,28 +1,28 @@
 <mat-expansion-panel [expanded]="isStepCurrent" [disabled]="!canAccessStep">
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      <mat-icon>{{
-        isStepCompleted ? 'check_circle' : isStepCurrent ? 'radio_button_checked' : 'radio_button_unchecked'
-      }}</mat-icon>
-      &nbsp; 4) Elegir 'Datos a guardar'
-    </mat-panel-title>
-    <mat-panel-description *ngIf="selectedColumns.length > 0">
-      {{ selectedColumns.length }} columnas seleccionadas
-    </mat-panel-description>
-  </mat-expansion-panel-header>
-  <div class="step-content">
-    <p><strong>Selecciona las columnas que quieres incluir en los archivos generados:</strong></p>
-    <div class="columns-grid">
-      <mat-checkbox
-        *ngFor="let header of headers"
-        [(ngModel)]="selectedColumnsMap[header]"
-        (ngModelChange)="onCheckboxChange(header, $event)"
-      >
-        {{ header }}
-      </mat-checkbox>
-    </div>
-    <div class="step-actions">
-      <button mat-raised-button color="primary" (click)="onContinue()">Continuar</button>
-    </div>
-  </div>
+	<mat-expansion-panel-header>
+		<mat-panel-title>
+			<mat-icon>{{
+				isStepCompleted ? 'check_circle' : isStepCurrent ? 'radio_button_checked' : 'radio_button_unchecked'
+			}}</mat-icon>
+			&nbsp; 4) Elegir 'Datos a guardar'
+		</mat-panel-title>
+		<mat-panel-description *ngIf="selectedColumns.length > 0">
+			{{ selectedColumns.length }} columnas seleccionadas
+		</mat-panel-description>
+	</mat-expansion-panel-header>
+	<div class="step-content">
+		<p><strong>Selecciona las columnas que quieres incluir en los archivos generados:</strong></p>
+		<div class="columns-grid">
+			<mat-checkbox
+				*ngFor="let header of headers"
+				[(ngModel)]="selectedColumnsMap[header]"
+				(ngModelChange)="onCheckboxChange(header, $event)"
+			>
+				{{ header }}
+			</mat-checkbox>
+		</div>
+		<div class="step-actions">
+			<button mat-raised-button color="primary" (click)="onContinue()">Continuar</button>
+		</div>
+	</div>
 </mat-expansion-panel>

@@ -39,18 +39,29 @@
 		>
 		</app-step3-filters>
 
-		   <!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
-		   <app-step4-choose-columns
-			   [isStepCurrent]="isStepCurrent(4)"
-			   [canAccessStep]="canAccessStep(4)"
-			   [isStepCompleted]="isStepCompleted(4)"
-			   [headers]="headers"
-			   [selectedColumnsMap]="selectedColumnsMap"
-			   [selectedColumns]="selectedColumns"
-			   (columnCheckboxChange)="onColumnCheckboxModelChange($event.header, $event.checked)"
-			   (nextStep)="nextStep()"
-		   >
-		   </app-step4-choose-columns>
+		<!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
+		<app-step4-choose-columns
+			[isStepCurrent]="isStepCurrent(4)"
+			[canAccessStep]="canAccessStep(4)"
+			[isStepCompleted]="isStepCompleted(4)"
+			[headers]="headers"
+			[selectedColumnsMap]="selectedColumnsMap"
+			[selectedColumns]="selectedColumns"
+			(columnCheckboxChange)="onColumnCheckboxModelChange($event.header, $event.checked)"
+			(nextStep)="nextStep()"
+		>
+		</app-step4-choose-columns>
+		<app-step4-choose-columns
+			[isStepCurrent]="true"
+			[canAccessStep]="true"
+			[isStepCompleted]="true"
+			[headers]="headers"
+			[selectedColumnsMap]="selectedColumnsMap"
+			[selectedColumns]="selectedColumns"
+			(columnCheckboxChange)="onColumnCheckboxModelChange($event.header, $event.checked)"
+			(nextStep)="nextStep()"
+		>
+		</app-step4-choose-columns>
 
 		<!-- ==================== PASO 5: NOMBRE BASE Y DESCARGAR ==================== -->
 		<!-- <mat-expansion-panel

@@ -29,7 +29,9 @@ class ValuesToKeepByHeader(BaseModel):
     header: str
     values: list
 
-# ------------------- APP Y ENDPOINTS -------------------
+
+# ==================== PASO 1: SUBIR ARCHIVO ====================
+
 
 app = FastAPI()
 
@@ -46,6 +48,8 @@ app.add_middleware(
 def read_root():
     return {"message": "¡Hola mundo desde FastAPI!"}
 
+
+# PASO 1: SUBIR ARCHIVO
 @app.post("/upload_file", response_model=UploadFileResponse)
 async def upload_file(file: UploadFile = File(...)) -> UploadFileResponse:
     """
@@ -55,12 +59,13 @@ async def upload_file(file: UploadFile = File(...)) -> UploadFileResponse:
     filename = file.filename if file.filename is not None else "archivo.xlsx"
     return UploadFileResponse(file_id=file_id, filename=filename, message="Archivo cargado exitosamente")
 
+
+# ==================== PASO 2: ELEGIR 'SEPARAR POR' ====================
 @app.get("/get_headers/{file_id}", response_model=HeadersResponse)
 def get_headers(file_id: str) -> HeadersResponse:
     """Obtiene los headers del archivo especificado por file_id."""
     headers = get_headers_by_id(file_id)
     return HeadersResponse(headers=headers)
-
 
 @app.post("/set_header_to_split/{file_id}", response_model=UniqueValuesResponse)
 def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueValuesResponse:
@@ -70,17 +75,21 @@ def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueVa
     unique_values_in_header_to_split = set_header_to_split_service(file_id, body.header)
     return UniqueValuesResponse(unique_values_in_header_to_split=unique_values_in_header_to_split)
 
-@app.post("/set_headers_to_keep/{file_id}")
-def set_headers_to_keep(file_id: str, headers: HeadersResponse = Body(...)):
-    unique_values = set_headers_to_keep_service(file_id, headers.headers)
-    return {"unique_values": unique_values}
 
+
+# ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ====================
 @app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)
 def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> ValuesToKeepByHeader:
     values = set_header_to_split_service_service(file_id, body.header, body.values)
     return ValuesToKeepByHeader(header=body.header, values=values)
 
-# Descargar archivos generados según la configuración guardada
+
+# ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ====================
+@app.post("/set_headers_to_keep/{file_id}")
+def set_headers_to_keep(file_id: str, headers: HeadersResponse = Body(...)):
+    unique_values = set_headers_to_keep_service(file_id, headers.headers)
+    return {"unique_values": unique_values}
+# ==================== PASO 5: NOMBRE BASE Y DESCARGAR ====================
 @app.get("/download_files/{file_id}")
 def download_files(file_id: str, background_tasks: BackgroundTasks):
     zip_path = generate_excels_by_value(file_id)
@@ -97,4 +106,10 @@ def download_files(file_id: str, background_tasks: BackgroundTasks):
     return FileResponse(zip_path, 
         filename=f"archivos_{file_id}.zip", 
         media_type="application/zip"
-    ) 
+    )
+
+# ==================== LÓGICA PENDIENTE ====================
+# Aquí puedes agregar endpoints o lógica para pasos adicionales si es necesario
+
+
+

@@ -13,8 +13,8 @@
 	<div class="step-content">
 		<p><strong>Selecciona las columnas que quieres incluir en los archivos generados:</strong></p>
 		<mat-form-field appearance="outline" class="mat-form-field-fluid">
-			<mat-label>Buscar columna</mat-label>
-			<mat-select multiple>
+			<mat-label>Columna a guardar</mat-label>
+			<mat-select multiple [(ngModel)]="selectedColumns">
 				<mat-option>
 					<input
 						matInput
@@ -25,7 +25,7 @@
 						style="width: 100%"
 					/>
 				</mat-option>
-				<mat-option *ngFor="let header of filteredHeaders" [value]="header" (click)="toggleColumn(header)">
+				<mat-option *ngFor="let header of filteredHeaders" [value]="header">
 					{{ header }}
 				</mat-option>
 			</mat-select>
@@ -34,12 +34,14 @@
 		<div class="current-filters" *ngIf="selectedColumns && selectedColumns.length > 0">
 			<p><strong>Columnas seleccionadas:</strong></p>
 			<mat-chip-listbox>
-				<mat-chip *ngFor="let col of selectedColumns">{{ col }}</mat-chip>
+				<mat-chip> {{ selectedColumns.join(', ') }}</mat-chip>
 			</mat-chip-listbox>
 		</div>
 
 		<div class="step-actions">
-			<button mat-raised-button color="primary" (click)="onContinue()">Continuar</button>
+			<button mat-raised-button color="primary" (click)="onContinue()" [disabled]="selectedColumns.length === 0">
+				Continuar
+			</button>
 		</div>
 	</div>
 </mat-expansion-panel>

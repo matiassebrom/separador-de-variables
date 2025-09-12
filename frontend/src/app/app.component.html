@@ -25,13 +25,6 @@
 			[isStepCurrent]="isStepCurrent(3)"
 			[canAccessStep]="canAccessStep(3)"
 			[isStepCompleted]="isStepCompleted(3)"
-			[selectedFilterColumn]="selectedFilterColumn"
-			[selectedFiltersMap]="selectedFiltersMap"
-			[selectedFilters]="selectedFilters"
-			[etapaValues]="etapaValues"
-			(filterColumnChange)="selectedFilterColumn = $event"
-			(filterCheckboxChange)="onFilterCheckboxModelChange($event.value, $event.checked)"
-			(clearFilters)="selectedFilters = []; selectedFiltersMap = {}"
 			(nextStep)="nextStep()"
 		>
 		</app-step3-filters>

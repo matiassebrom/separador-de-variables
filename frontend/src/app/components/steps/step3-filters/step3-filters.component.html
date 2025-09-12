@@ -1,6 +1,4 @@
-<mat-expansion-panel
-	[expanded]="isStepCurrent"
-	[disabled]="!canAccessStep">
+<mat-expansion-panel [expanded]="isStepCurrent" [disabled]="!canAccessStep">
 	<mat-expansion-panel-header>
 		<mat-panel-title>
 			<mat-icon>{{
@@ -8,19 +6,15 @@
 			}}</mat-icon>
 			&nbsp; 3) Configurar filtros (opcional)
 		</mat-panel-title>
-		<mat-panel-description *ngIf="selectedFilters.length > 0">
-			ETAPA: {{ selectedFilters.join(', ') }}
+		<mat-panel-description *ngIf="selectedColumnValues.length > 0">
+			Filtrar por: {{ selectedFilterColumn }} {{ selectedColumnValues.join(', ') }}
 		</mat-panel-description>
 	</mat-expansion-panel-header>
 	<div class="step-content">
 		<p>Podés agregar filtros para incluir/excluir que datos vas a exportar. Es opcional.</p>
-		<mat-form-field
-			appearance="outline"
-			class="mat-form-field-fluid">
+		<mat-form-field appearance="outline" class="mat-form-field-fluid">
 			<mat-label>Columna a filtrar </mat-label>
-			<mat-select
-				[ngModel]="selectedFilterColumn"
-				(ngModelChange)="onFilterColumnChange($event)">
+			<mat-select [ngModel]="selectedFilterColumn" (ngModelChange)="onFilterColumnChange($event)">
 				<mat-option>
 					<input
 						matInput
@@ -28,51 +22,35 @@
 						[(ngModel)]="headerSearchTerm"
 						(click)="$event.stopPropagation()"
 						(keydown)="$event.stopPropagation()"
-						style="width: 100%" />
+						style="width: 100%"
+					/>
 				</mat-option>
 				<mat-option value="">( ninguna )</mat-option>
-				<mat-option
-					*ngFor="let header of filteredHeaders"
-					[value]="header">
+				<mat-option *ngFor="let header of filteredHeaders" [value]="header">
 					{{ header }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
 
-		<mat-form-field
-			appearance="outline"
-			class="mat-form-field-fluid">
+		<mat-form-field appearance="outline" class="mat-form-field-fluid">
 			<mat-label>Valores permitidos (columna)</mat-label>
 			<mat-select multiple>
-				<mat-option
-					*ngFor="let value of columnValues"
-					(click)="toggleColumnValue(value)">
+				<mat-option *ngFor="let value of columnValues" (click)="toggleColumnValue(value)">
 					{{ value }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
 
-		<div
-			class="current-filters"
-			*ngIf="selectedFilters.length > 0">
+		<div class="current-filters" *ngIf="selectedColumnValues.length > 0">
 			<p><strong>Filtros actuales:</strong></p>
 			<mat-chip-listbox>
-				<mat-chip>ETAPA: {{ selectedColumnValues.join(', ') }}</mat-chip>
+				<mat-chip> {{ selectedColumnValues.join(', ') }}</mat-chip>
 			</mat-chip-listbox>
 		</div>
 
 		<div class="step-actions">
-			<button
-				mat-button
-				(click)="clearFilters.emit()">
-				Limpiar filtros
-			</button>
-			<button
-				mat-raised-button
-				color="primary"
-				(click)="onContinue()">
-				Continuar
-			</button>
+			<button mat-button (click)="clearFilters()">Limpiar filtros</button>
+			<button mat-raised-button color="primary" (click)="onContinue()">Continuar</button>
 		</div>
 	</div>
 </mat-expansion-panel>

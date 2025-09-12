@@ -1,4 +1,14 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+	Component,
+	Input,
+	Output,
+	EventEmitter,
+	OnInit,
+	OnChanges,
+	SimpleChanges,
+	signal,
+	effect
+} from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 import { FileStateService } from '../../../services/file-state.service';
 import { CommonModule } from '@angular/common';
@@ -28,48 +38,82 @@ import { MatChipsModule } from '@angular/material/chips';
 	templateUrl: './step3-filters.component.html',
 	styleUrl: './step3-filters.component.scss'
 })
-export class Step3FiltersComponent implements OnInit {
+export class Step3FiltersComponent implements OnInit, OnChanges {
 	@Input() isStepCurrent = false;
 	@Input() canAccessStep = false;
 	@Input() isStepCompleted = false;
-	@Input() selectedFilterColumn = '';
-	@Input() selectedFiltersMap: Record<string, boolean> = {};
-	@Input() selectedFilters: string[] = [];
-	@Input() etapaValues: string[] = [];
-	@Input() headers: string[] = [];
-	@Input() uniqueValues: string[] = [];
-	@Input() selectedUniqueValues: string[] = [];
-	@Input() columnValues: string[] = [];
-	@Output() filterColumnChange = new EventEmitter<string>();
-	@Output() filterCheckboxChange = new EventEmitter<{ value: string; checked: boolean }>();
-	@Output() clearFilters = new EventEmitter<void>();
-	@Output() nextStep = new EventEmitter<void>();
-	@Output() uniqueValuesChange = new EventEmitter<string[]>();
 
-	searchTerm = '';
-	selectedUniqueValuesLocal: string[] = [];
+	@Output() nextStep = new EventEmitter<void>();
+
+	columnValues: string[] = [];
+
+	selectedFilterColumn: string = '';
 	selectedColumnValues: string[] = [];
+
 	headerSearchTerm: string = '';
+	searchTerm = '';
+
+	headers = signal<string[]>([]);
+	isLoadingHeaders = signal(false);
+	errorMessage = signal<string>('');
 
 	constructor(
 		private api: ApiService,
 		public fileStateService: FileStateService
-	) {}
+	) {
+		// Efecto reactivo para cargar headers cuando el paso es accesible y actual
+		effect(() => {
+			const fileId = this.fileStateService.fileId();
+			const canAccess = this.canAccessStep;
+			const isCurrentStep = this.isStepCurrent;
+			if (fileId && canAccess && isCurrentStep) {
+				this.loadHeaders();
+			}
+		});
+	}
 
-	ngOnInit() {
-		// Inicializar el estado local con los valores recibidos (si los hay)
-		this.selectedUniqueValuesLocal = [...this.selectedUniqueValues];
+	ngOnInit() {}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (changes['canAccessStep'] || changes['isStepCurrent']) {
+			const fileId = this.fileStateService.fileId();
+			if (fileId && this.canAccessStep && this.isStepCurrent) {
+				this.loadHeaders();
+			}
+		}
+	}
+
+	loadHeaders() {
+		const fileId = this.fileStateService.fileId();
+		if (!fileId) {
+			this.errorMessage.set('No hay archivo subido');
+			return;
+		}
+		if (this.isLoadingHeaders() || this.headers().length > 0) {
+			return;
+		}
+		this.isLoadingHeaders.set(true);
+		this.errorMessage.set('');
+		this.api.getHeaders(fileId).subscribe({
+			next: (response) => {
+				this.headers.set(response.headers);
+				this.isLoadingHeaders.set(false);
+			},
+			error: (error) => {
+				this.errorMessage.set('Error al cargar las columnas del archivo');
+				this.isLoadingHeaders.set(false);
+			}
+		});
 	}
 
 	get filteredHeaders(): string[] {
-		if (!this.headerSearchTerm) return this.headers;
-		return (this.headers || []).filter(
-			(h: string) => h && h.toLowerCase().includes(this.headerSearchTerm.toLowerCase())
-		);
+		const headers = this.headers();
+		if (!this.headerSearchTerm) return headers;
+		return (headers || []).filter((h: string) => h && h.toLowerCase().includes(this.headerSearchTerm.toLowerCase()));
 	}
 
 	onFilterColumnChange(header: string) {
-		this.filterColumnChange.emit(header);
+		this.selectedFilterColumn = header;
 		const fileId = this.fileStateService.getCurrentFileId();
 		// Llamar al backend solo si hay fileId y header seleccionado
 		if (fileId && header) {
@@ -102,25 +146,6 @@ export class Step3FiltersComponent implements OnInit {
 		}
 	}
 
-	get filteredUniqueValues() {
-		if (!this.searchTerm) return this.uniqueValues;
-		return this.uniqueValues.filter((v) => v.toLowerCase().includes(this.searchTerm.toLowerCase()));
-	}
-
-	isValueSelected(value: string): boolean {
-		return this.selectedUniqueValuesLocal.includes(value);
-	}
-
-	toggleValue(value: string) {
-		if (this.isValueSelected(value)) {
-			this.selectedUniqueValuesLocal = this.selectedUniqueValuesLocal.filter((v) => v !== value);
-		} else {
-			this.selectedUniqueValuesLocal = [...this.selectedUniqueValuesLocal, value];
-		}
-		this.uniqueValuesChange.emit(this.selectedUniqueValuesLocal);
-		console.log(this.selectedUniqueValuesLocal);
-	}
-
 	isColumnValueSelected(value: string): boolean {
 		return this.selectedColumnValues.includes(value);
 	}
@@ -132,6 +157,9 @@ export class Step3FiltersComponent implements OnInit {
 			this.selectedColumnValues = [...this.selectedColumnValues, value];
 			console.log('Valor de filtrado agregado:', value, this.selectedColumnValues);
 		}
-		this.uniqueValuesChange.emit(this.selectedColumnValues);
+	}
+
+	clearFilters() {
+		this.selectedColumnValues = [];
 	}
 }

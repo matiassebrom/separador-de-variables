@@ -45,8 +45,6 @@ import { Step4ChooseColumnsComponent } from './components/steps/step4-choose-col
 })
 export class AppComponent implements OnInit {
 	constructor(private api: ApiService) {}
-	selectedFilterColumn: string = '';
-	selectedFiltersMap: Record<string, boolean> = {};
 	selectedColumnsMap: Record<string, boolean> = {};
 
 	title = 'split-excel-frontend';
@@ -55,8 +53,6 @@ export class AppComponent implements OnInit {
 
 	// <todo esto esta harcodeado para hacer pruebas
 
-	etapaValues = ['Activos', 'Inactivos', 'Pendientes'];
-	selectedFilters = ['Activos', 'Inactivos'];
 	previewFiles = [
 		{ name: 'datos_separados - ORIGEN - WEB.xlsx', excluded: false },
 		{ name: 'datos_separados - ORIGEN - MOBILE.xlsx', excluded: false },
@@ -69,19 +65,6 @@ export class AppComponent implements OnInit {
 			next: (resp) => console.log('Respuesta backend:', resp),
 			error: (err) => console.error('Error backend:', err)
 		});
-	}
-
-	onFilterCheckboxModelChange(value: string, checked: boolean) {
-		if (checked) {
-			if (!this.selectedFilters.includes(value)) {
-				this.selectedFilters.push(value);
-			}
-		} else {
-			const idx = this.selectedFilters.indexOf(value);
-			if (idx > -1) {
-				this.selectedFilters.splice(idx, 1);
-			}
-		}
 	}
 
 	get includedPreviewFiles() {

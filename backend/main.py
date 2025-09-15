@@ -1,22 +1,11 @@
-
 import os
+from fastapi.responses import FileResponse
 from fastapi import BackgroundTasks, FastAPI, UploadFile, File, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
-from backend.services.excel_service import (
-    save_uploaded_file,
-    get_headers_by_id,
-    get_unique_values_by_header,
-    set_header_to_split as set_header_to_split_service,
-    set_headers_to_keep as set_headers_to_keep_service,
-    set_values_to_keep_by_header as set_header_to_split_service_service,
-    generate_excels_by_value,
-    file_store,
-    cleanup_file,
-    get_zip_base_name,
-)
+from services.excel_service import save_uploaded_file, get_headers_by_id, get_unique_values_by_header, set_header_to_split as set_header_to_split_service, set_headers_to_keep as set_headers_to_keep_service, set_values_to_keep_by_header as set_header_to_split_service_service, generate_excels_by_value
 
 
 # ------------------- MODELOS -------------------
@@ -35,24 +24,12 @@ class SetHeaderToSplitRequest(BaseModel):
     header: str
 
 
-
 # Modelo único para request y response
 class ValuesToKeepByHeader(BaseModel):
     header: str
     values: list
 
-
-# Modelo para el nombre base de descarga
-class SetBaseNameRequest(BaseModel):
-    base_name: str
-
-
-class GetUniqueValuesRequest(BaseModel):
-    header: str
-
-
-# ==================== PASO 1: SUBIR ARCHIVO ====================
-
+# ------------------- APP Y ENDPOINTS -------------------
 
 app = FastAPI()
 
@@ -69,8 +46,6 @@ app.add_middleware(
 def read_root():
     return {"message": "¡Hola mundo desde FastAPI!"}
 
-
-# PASO 1: SUBIR ARCHIVO
 @app.post("/upload_file", response_model=UploadFileResponse)
 async def upload_file(file: UploadFile = File(...)) -> UploadFileResponse:
     """
@@ -80,13 +55,12 @@ async def upload_file(file: UploadFile = File(...)) -> UploadFileResponse:
     filename = file.filename if file.filename is not None else "archivo.xlsx"
     return UploadFileResponse(file_id=file_id, filename=filename, message="Archivo cargado exitosamente")
 
-
-# ==================== PASO 2: ELEGIR 'SEPARAR POR' ====================
 @app.get("/get_headers/{file_id}", response_model=HeadersResponse)
 def get_headers(file_id: str) -> HeadersResponse:
     """Obtiene los headers del archivo especificado por file_id."""
     headers = get_headers_by_id(file_id)
     return HeadersResponse(headers=headers)
+
 
 @app.post("/set_header_to_split/{file_id}", response_model=UniqueValuesResponse)
 def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueValuesResponse:
@@ -96,56 +70,31 @@ def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueVa
     unique_values_in_header_to_split = set_header_to_split_service(file_id, body.header)
     return UniqueValuesResponse(unique_values_in_header_to_split=unique_values_in_header_to_split)
 
-
-
- # ==================== PASO 3: OBTENER VALORES ÚNICOS DE UNA COLUMNA ====================
-
-
-
-@app.post("/get_unique_values/{file_id}")
-def get_unique_values(file_id: str, body: GetUniqueValuesRequest):
-    """
-    Devuelve los valores únicos de una columna específica del archivo subido.
-    """
-    try:
-        values = get_unique_values_by_header(file_id, body.header)
-        return {"unique_values": values}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-# ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ====================
-@app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)
-def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> ValuesToKeepByHeader:
-    values = set_header_to_split_service_service(file_id, body.header, body.values)
-    return ValuesToKeepByHeader(header=body.header, values=values)
-
-
-# ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ====================
 @app.post("/set_headers_to_keep/{file_id}")
 def set_headers_to_keep(file_id: str, headers: HeadersResponse = Body(...)):
     unique_values = set_headers_to_keep_service(file_id, headers.headers)
     return {"unique_values": unique_values}
 
-# ==================== PASO 5: NOMBRE BASE Y DESCARGAR ====================
-@app.post("/set_base_name/{file_id}")
-def set_base_name(file_id: str, body: SetBaseNameRequest):
-    if file_id not in file_store:
-        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
-    file_store[file_id]["base_name"] = body.base_name
-    return {"message": f"Base name set to '{body.base_name}' for file {file_id}"}
+@app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)
+def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> ValuesToKeepByHeader:
+    values = set_header_to_split_service_service(file_id, body.header, body.values)
+    return ValuesToKeepByHeader(header=body.header, values=values)
 
+# Descargar archivos generados según la configuración guardada
 @app.get("/download_files/{file_id}")
 def download_files(file_id: str, background_tasks: BackgroundTasks):
     zip_path = generate_excels_by_value(file_id)
-    background_tasks.add_task(lambda: cleanup_file(zip_path))
-    base_name = get_zip_base_name(file_id)
+
+    def cleanup():
+        try:
+            if os.path.exists(zip_path):
+                os.unlink(zip_path)
+        except Exception as e:
+            print(f"Error cleaning up {zip_path}: {e}")
+
+    background_tasks.add_task(cleanup)
+    
     return FileResponse(zip_path, 
-        filename=f"{base_name}.zip", 
+        filename=f"archivos_{file_id}.zip", 
         media_type="application/zip"
-    )
-
-# ==================== LÓGICA PENDIENTE ====================
-# Aquí puedes agregar endpoints o lógica para pasos adicionales si es necesario
-
-
-
+    ) 

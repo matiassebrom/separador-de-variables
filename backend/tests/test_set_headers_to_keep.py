@@ -20,4 +20,6 @@ def test_set_headers_to_keep():
     assert response.status_code == 200
     data = response.json()
     assert "unique_values" in data
-    assert set(data["unique_values"]) == {"ORIGEN", "GURUS", "OPI", "TAP"}
+    # El archivo de test debe tener estos valores únicos en la columna ORIGEN
+    expected_values = {"ORIGEN", "GURUS", "OPI", "TAP"}
+    assert set(data["unique_values"]) == expected_values

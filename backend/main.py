@@ -47,6 +47,10 @@ class SetBaseNameRequest(BaseModel):
     base_name: str
 
 
+class GetUniqueValuesRequest(BaseModel):
+    header: str
+
+
 # ==================== PASO 1: SUBIR ARCHIVO ====================
 
 
@@ -96,13 +100,15 @@ def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueVa
 
  # ==================== PASO 3: OBTENER VALORES ÚNICOS DE UNA COLUMNA ====================
 
-@app.get("/get_unique_values/{file_id}/{header}")
-def get_unique_values(file_id: str, header: str):
+
+
+@app.post("/get_unique_values/{file_id}")
+def get_unique_values(file_id: str, body: GetUniqueValuesRequest):
     """
     Devuelve los valores únicos de una columna específica del archivo subido.
     """
     try:
-        values = get_unique_values_by_header(file_id, header)
+        values = get_unique_values_by_header(file_id, body.header)
         return {"unique_values": values}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

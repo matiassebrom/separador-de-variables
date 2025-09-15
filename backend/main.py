@@ -11,7 +11,7 @@ from backend.services.excel_service import (
     get_unique_values_by_header,
     set_header_to_split as set_header_to_split_service,
     set_headers_to_keep as set_headers_to_keep_service,
-    set_values_to_keep_by_header as set_header_to_split_service_service,
+    set_values_to_keep_by_header as set_values_to_keep_by_header_service,
     generate_excels_by_value,
     file_store,
     cleanup_file,
@@ -116,7 +116,7 @@ def get_unique_values(file_id: str, body: GetUniqueValuesRequest):
 # ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ====================
 @app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)
 def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> ValuesToKeepByHeader:
-    values = set_header_to_split_service_service(file_id, body.header, body.values)
+    values = set_values_to_keep_by_header_service(file_id, body.header, body.values)
     return ValuesToKeepByHeader(header=body.header, values=values)
 
 

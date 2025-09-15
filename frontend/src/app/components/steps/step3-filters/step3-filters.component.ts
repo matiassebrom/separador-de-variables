@@ -53,6 +53,11 @@ export class Step3FiltersComponent implements OnInit, OnChanges {
 	headerSearchTerm: string = '';
 	searchTerm = '';
 
+	get filteredColumnValues(): string[] {
+		if (!this.searchTerm) return this.columnValues;
+		return this.columnValues.filter((v) => v && v.toLowerCase().includes(this.searchTerm.toLowerCase()));
+	}
+
 	constructor(
 		private api: ApiService,
 		public fileStateService: FileStateService

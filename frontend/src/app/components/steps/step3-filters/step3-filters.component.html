@@ -35,7 +35,17 @@
 		<mat-form-field appearance="outline" class="mat-form-field-fluid">
 			<mat-label>Valores permitidos (columna)</mat-label>
 			<mat-select multiple>
-				<mat-option *ngFor="let value of columnValues" (click)="toggleColumnValue(value)">
+				<mat-option>
+					<input
+						matInput
+						placeholder="Buscar valor..."
+						[(ngModel)]="searchTerm"
+						(click)="$event.stopPropagation()"
+						(keydown)="$event.stopPropagation()"
+						style="width: 100%"
+					/>
+				</mat-option>
+				<mat-option *ngFor="let value of filteredColumnValues" (click)="toggleColumnValue(value)">
 					{{ value }}
 				</mat-option>
 			</mat-select>

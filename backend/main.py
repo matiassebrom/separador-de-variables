@@ -5,7 +5,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List
-from backend.services.excel_service import save_uploaded_file, get_headers_by_id, get_unique_values_by_header, set_header_to_split as set_header_to_split_service, set_headers_to_keep as set_headers_to_keep_service, set_values_to_keep_by_header as set_header_to_split_service_service, generate_excels_by_value
+from backend.services.excel_service import (
+    save_uploaded_file,
+    get_headers_by_id,
+    get_unique_values_by_header,
+    set_header_to_split as set_header_to_split_service,
+    set_headers_to_keep as set_headers_to_keep_service,
+    set_values_to_keep_by_header as set_values_to_keep_by_header_service,
+    generate_excels_by_value,
+    file_store,
+    cleanup_file,
+    get_zip_base_name,
+)
 
 
 # ------------------- MODELOS -------------------
@@ -70,17 +81,44 @@ def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueVa
     unique_values_in_header_to_split = set_header_to_split_service(file_id, body.header)
     return UniqueValuesResponse(unique_values_in_header_to_split=unique_values_in_header_to_split)
 
+
+
+ # ==================== PASO 3: OBTENER VALORES ÚNICOS DE UNA COLUMNA ====================
+
+
+
+@app.post("/get_unique_values/{file_id}")
+def get_unique_values(file_id: str, body: GetUniqueValuesRequest):
+    """
+    Devuelve los valores únicos de una columna específica del archivo subido.
+    """
+    try:
+        values = get_unique_values_by_header(file_id, body.header)
+        return {"unique_values": values}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+# ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ====================
+@app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)
+def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> ValuesToKeepByHeader:
+    values = set_values_to_keep_by_header_service(file_id, body.header, body.values)
+    return ValuesToKeepByHeader(header=body.header, values=values)
+
+
+# ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ====================
 @app.post("/set_headers_to_keep/{file_id}")
 def set_headers_to_keep(file_id: str, headers: HeadersResponse = Body(...)):
     unique_values = set_headers_to_keep_service(file_id, headers.headers)
     return {"unique_values": unique_values}
 
-@app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)
-def set_values_to_keep_by_header(file_id: str, body: ValuesToKeepByHeader) -> ValuesToKeepByHeader:
-    values = set_header_to_split_service_service(file_id, body.header, body.values)
-    return ValuesToKeepByHeader(header=body.header, values=values)
+# ==================== PASO 5: NOMBRE BASE Y DESCARGAR ====================
+@app.post("/set_base_name/{file_id}")
+def set_base_name(file_id: str, body: SetBaseNameRequest):
+    if file_id not in file_store:
+        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
+    file_store[file_id]["base_name"] = body.base_name
+    return {"message": f"Base name set to '{body.base_name}' for file {file_id}"}
 
-# Descargar archivos generados según la configuración guardada
 @app.get("/download_files/{file_id}")
 def download_files(file_id: str, background_tasks: BackgroundTasks):
     zip_path = generate_excels_by_value(file_id)

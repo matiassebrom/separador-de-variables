@@ -53,61 +53,21 @@ export class Step3FiltersComponent implements OnInit, OnChanges {
 	headerSearchTerm: string = '';
 	searchTerm = '';
 
-	headers = signal<string[]>([]);
-	isLoadingHeaders = signal(false);
-	errorMessage = signal<string>('');
-
 	constructor(
 		private api: ApiService,
 		public fileStateService: FileStateService
 	) {
-		// Efecto reactivo para cargar headers cuando el paso es accesible y actual
-		effect(() => {
-			const fileId = this.fileStateService.fileId();
-			const canAccess = this.canAccessStep;
-			const isCurrentStep = this.isStepCurrent;
-			if (fileId && canAccess && isCurrentStep) {
-				this.loadHeaders();
-			}
-		});
+		// Ya no es necesario cargar headers, se obtienen del FileStateService
 	}
 
 	ngOnInit() {}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes['canAccessStep'] || changes['isStepCurrent']) {
-			const fileId = this.fileStateService.fileId();
-			if (fileId && this.canAccessStep && this.isStepCurrent) {
-				this.loadHeaders();
-			}
-		}
-	}
-
-	loadHeaders() {
-		const fileId = this.fileStateService.fileId();
-		if (!fileId) {
-			this.errorMessage.set('No hay archivo subido');
-			return;
-		}
-		if (this.isLoadingHeaders() || this.headers().length > 0) {
-			return;
-		}
-		this.isLoadingHeaders.set(true);
-		this.errorMessage.set('');
-		this.api.getHeaders(fileId).subscribe({
-			next: (response) => {
-				this.headers.set(response.headers);
-				this.isLoadingHeaders.set(false);
-			},
-			error: (error) => {
-				this.errorMessage.set('Error al cargar las columnas del archivo');
-				this.isLoadingHeaders.set(false);
-			}
-		});
+		// Ya no es necesario cargar headers aquí
 	}
 
 	get filteredHeaders(): string[] {
-		const headers = this.headers();
+		const headers = this.fileStateService.headers();
 		if (!this.headerSearchTerm) return headers;
 		return (headers || []).filter((h: string) => h && h.toLowerCase().includes(this.headerSearchTerm.toLowerCase()));
 	}

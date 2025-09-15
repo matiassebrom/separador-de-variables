@@ -13,6 +13,10 @@ export class FileStateService {
 	// 🎯 Signal que guarda la información del archivo
 	private uploadedFile = signal<UploadedFileInfo | null>(null);
 
+	// 🎯 Signal para los headers del archivo
+	private _headers = signal<string[]>([]);
+	headers = computed(() => this._headers());
+
 	// 📖 Computed signals para acceder a la información
 	fileId = computed(() => this.uploadedFile()?.file_id ?? null);
 	filename = computed(() => this.uploadedFile()?.filename ?? null);
@@ -24,9 +28,16 @@ export class FileStateService {
 		console.log('📁 Archivo guardado:', fileInfo);
 	}
 
+	// Método para guardar los headers
+	setHeaders(headers: string[]) {
+		this._headers.set(headers);
+		console.log('📋 Headers guardados:', headers);
+	}
+
 	// 🗑️ Método para limpiar el estado
 	clearFile() {
 		this.uploadedFile.set(null);
+		this._headers.set([]);
 	}
 
 	// 📋 Método para obtener el file_id actual

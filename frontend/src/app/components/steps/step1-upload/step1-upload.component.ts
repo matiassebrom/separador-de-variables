@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 	standalone: true,
 	imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
 	templateUrl: './step1-upload.component.html',
-	styleUrl: './step1-upload.component.scss',
+	styleUrl: './step1-upload.component.scss'
 })
 export class Step1UploadComponent {
 	@Input() fileUploaded = false;
@@ -24,7 +24,10 @@ export class Step1UploadComponent {
 	isUploading = signal(false);
 	uploadStatus = signal<string>('');
 
-	constructor(private api: ApiService, public fileStateService: FileStateService) {}
+	constructor(
+		private api: ApiService,
+		public fileStateService: FileStateService
+	) {}
 
 	onFileSelected(event: Event) {
 		const input = event.target as HTMLInputElement;
@@ -79,17 +82,27 @@ export class Step1UploadComponent {
 				this.fileStateService.setUploadedFile({
 					file_id: response.file_id,
 					filename: response.filename,
-					message: response.message,
+					message: response.message
 				});
 
-				console.log('File ID guardado:', this.fileStateService.fileId());
-				this.fileUpload.emit();
+				// 🚦 Pedir headers y guardarlos en el estado global
+				this.api.getHeaders(response.file_id).subscribe({
+					next: (headersResp) => {
+						this.fileStateService.setHeaders(headersResp.headers);
+						console.log('Headers guardados en FileStateService:', headersResp.headers);
+						this.fileUpload.emit();
+					},
+					error: (err) => {
+						console.error('Error al obtener headers:', err);
+						this.fileUpload.emit(); // Emitir igual para no bloquear el flujo
+					}
+				});
 			},
 			error: (err: any) => {
 				console.error('Error backend:', err);
 				this.isUploading.set(false); // ❌ Desactivar loading en error
 				this.uploadStatus.set('❌ Error al subir el archivo');
-			},
+			}
 		});
 	}
 }

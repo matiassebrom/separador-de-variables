@@ -10,24 +10,8 @@
 	</mat-expansion-panel-header>
 
 	<div class="step-content">
-		<!-- 🔄 Estado de carga de headers -->
-		<div *ngIf="isLoadingHeaders()" class="loading-state mat-body-1">
-			<mat-icon color="primary">refresh</mat-icon>
-			<span>Cargando columnas del archivo...</span>
-		</div>
-
-		<!-- ❌ Estado de error -->
-		<div *ngIf="errorMessage()" class="error-state mat-body-1">
-			<mat-icon color="warn">error</mat-icon>
-			<span>{{ errorMessage() }}</span>
-			<button mat-stroked-button color="primary" (click)="loadHeaders()">
-				<mat-icon>refresh</mat-icon>
-				Reintentar
-			</button>
-		</div>
-
 		<!-- ✅ Buscador y selector de columna -->
-		<div *ngIf="!isLoadingHeaders() && !errorMessage() && headers().length > 0">
+		<div *ngIf="fileStateService.hasFile() && fileStateService.headers().length > 0">
 			<mat-form-field appearance="outline" class="mat-form-field-fluid">
 				<mat-label>Separar por (columna)</mat-label>
 				<mat-select [value]="selectedSeparateBy" (selectionChange)="onSeparateByChange($event.value)">

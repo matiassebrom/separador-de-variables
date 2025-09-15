@@ -64,7 +64,6 @@ export class Step2SeparateByComponent implements OnChanges {
 			// 2. El paso está habilitado para acceso
 			// 3. Es el paso actual (está expandido)
 			if (fileId && canAccess && isCurrentStep) {
-				console.log('🔄 Effect: Cargando headers para file_id:', fileId);
 				this.loadHeaders();
 			}
 		});
@@ -76,7 +75,7 @@ export class Step2SeparateByComponent implements OnChanges {
 			const fileId = this.fileStateService.fileId();
 
 			if (fileId && this.canAccessStep && this.isStepCurrent) {
-				console.log('🔄 ngOnChanges: Paso activado, cargando headers para:', fileId);
+				console.log('🔄 ngOnChanges: Paso 2, cargando headers para:', fileId);
 				this.loadHeaders();
 			}
 		}
@@ -89,24 +88,21 @@ export class Step2SeparateByComponent implements OnChanges {
 			return;
 		}
 
-		// Evitar cargas duplicadas
-		if (this.isLoadingHeaders() || this.headers().length > 0) {
-			console.log('⚠️ Headers ya cargados o en proceso de carga');
-			return;
-		}
+		// Solo cargar si no está cargando ni ya hay headers
+		if (this.isLoadingHeaders() || this.headers().length > 0) return;
 
 		this.isLoadingHeaders.set(true);
 		this.errorMessage.set('');
-		console.log('📡 Enviando petición GET /get_headers/' + fileId);
-
 		this.apiService.getHeaders(fileId).subscribe({
-			next: (response) => {
-				this.headers.set(response.headers);
+			next: ({ headers }) => {
+				this.headers.set(headers);
 				this.isLoadingHeaders.set(false);
-				console.log('✅ Headers cargados exitosamente:', response.headers);
+				// Solo loguear si realmente se cargaron headers nuevos
+				if (headers && headers.length > 0) {
+					console.log('✅ Headers cargados:', headers);
+				}
 			},
-			error: (error) => {
-				console.error('❌ Error al cargar headers:', error);
+			error: () => {
 				this.errorMessage.set('Error al cargar las columnas del archivo');
 				this.isLoadingHeaders.set(false);
 			}
@@ -125,9 +121,10 @@ export class Step2SeparateByComponent implements OnChanges {
 			return;
 		}
 		this.isSaving.set(true);
-		this.apiService.setHeaderToSplit(fileId, header).subscribe({
-			next: (response: UniqueValuesResponse) => {
-				this.uniqueValues.set(response.unique_values_in_header_to_split);
+		this.apiService.setHeaderToSplitAndGetValues(fileId, header).subscribe({
+			next: (uniqueValues: string[]) => {
+				console.log('✅ Valores únicos recibidos:', uniqueValues);
+				this.uniqueValues.set(uniqueValues);
 				this.isSaving.set(false);
 				this.nextStep.emit();
 			},

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 // ==================== PASO 1: SUBIR ARCHIVO ====================
 // Interfaces para PASO 1
@@ -60,8 +61,10 @@ export class ApiService {
 		return this.http.get<HeadersResponse>(`${this.baseUrl}/get_headers/${fileId}`);
 	}
 
-	setHeaderToSplit(fileId: string, header: string) {
-		return this.http.post<UniqueValuesResponse>(`${this.baseUrl}/set_header_to_split/${fileId}`, { header });
+	setHeaderToSplitAndGetValues(fileId: string, header: string): Observable<string[]> {
+		return this.http
+			.post<UniqueValuesResponse>(`${this.baseUrl}/set_header_to_split/${fileId}`, { header })
+			.pipe(map((response) => response.unique_values_in_header_to_split));
 	}
 
 	// ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ====================

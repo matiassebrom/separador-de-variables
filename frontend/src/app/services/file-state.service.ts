@@ -7,7 +7,7 @@ export interface UploadedFileInfo {
 }
 
 @Injectable({
-	providedIn: 'root',
+	providedIn: 'root'
 })
 export class FileStateService {
 	// 🎯 Signal que guarda la información del archivo
@@ -32,5 +32,17 @@ export class FileStateService {
 	// 📋 Método para obtener el file_id actual
 	getCurrentFileId(): string | null {
 		return this.fileId();
+	}
+
+	// Signal para el nombre base de los archivos
+	private _baseName = signal<string>('');
+	baseName = computed(() => this._baseName());
+
+	setBaseName(name: string) {
+		this._baseName.set(name);
+	}
+
+	getBaseName(): string {
+		return this._baseName();
 	}
 }

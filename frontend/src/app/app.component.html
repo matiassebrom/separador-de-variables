@@ -46,85 +46,18 @@
 		</app-step4-choose-columns> -->
 
 		<!-- ==================== PASO 5: NOMBRE BASE Y DESCARGAR ==================== -->
-		<!-- <mat-expansion-panel
-			[expanded]="isStepCurrent(5)"
-			[disabled]="!canAccessStep(5)">
-			<mat-expansion-panel-header>
-				<mat-panel-title>
-					<mat-icon>{{
-						isStepCompleted(5)
-							? 'check_circle'
-							: isStepCurrent(5)
-							? 'radio_button_checked'
-							: 'radio_button_unchecked'
-					}}</mat-icon>
-					&nbsp; 5) Nombre base y descargar
-				</mat-panel-title>
-				<mat-panel-description *ngIf="baseName">
-					{{ baseName }}
-				</mat-panel-description>
-			</mat-expansion-panel-header> -->
-		<div class="step-content">
-			<!-- Nombre base -->
-			<!-- <mat-form-field
-					appearance="outline"
-					class="full-width">
-					<mat-label>Nombre base para los archivos</mat-label>
-					<input
-						matInput
-						[(ngModel)]="baseName"
-						placeholder="datos_separados" />
-					<mat-hint>Los archivos se nombrarán como: [base] - [columna] - [valor].xlsx</mat-hint>
-				</mat-form-field> -->
-			<!-- Resumen -->
-			<!-- <mat-card class="summary-card">
-					<mat-card-header>
-						<mat-card-title>📋 Resumen de configuración</mat-card-title>
-					</mat-card-header>
-					<mat-card-content>
-						<p><strong>Separar por:</strong> {{ selectedSeparateBy }}</p>
-						<p>
-							<strong>Filtros:</strong>
-							<span *ngIf="selectedFilters.length > 0">ETAPA: {{ selectedFilters.join(', ') }}</span>
-							<span *ngIf="selectedFilters.length === 0">Sin filtros</span>
-						</p>
-						<p><strong>Columnas:</strong> {{ selectedColumns.join(', ') }}</p>
-						<p><strong>Nombre base:</strong> {{ baseName }}</p>
-					</mat-card-content>
-				</mat-card> -->
-			<!-- Preview de archivos -->
-			<!-- <div class="files-preview">
-					<h3>📁 Se generarán {{ includedPreviewFiles.length }} archivos:</h3>
-					<p class="hint">Haz clic en ✅ para excluir archivos que no quieras descargar</p>
-					<div class="file-list">
-						<mat-card
-							*ngFor="let file of previewFiles; let i = index"
-							class="file-item"
-							[class.excluded]="file.excluded">
-							<mat-card-content>
-								<button
-									mat-icon-button
-									(click)="toggleFileExclusion(i)"
-									[ngClass]="file.excluded ? 'warn-btn' : 'primary-btn'">
-									<mat-icon>{{ file.excluded ? 'cancel' : 'check_circle' }}</mat-icon>
-								</button>
-								<span [class.excluded-text]="file.excluded">{{ file.name }}</span>
-							</mat-card-content>
-						</mat-card>
-					</div>
-				</div> -->
-			<!-- Acción final -->
-			<!-- <div class="step-actions final-action">
-					<button
-						mat-raised-button
-						color="accent"
-						class="large-btn">
-						<mat-icon>download</mat-icon>
-						&nbsp; Generar y descargar archivos
-					</button>
-				</div>
-			</div> -->
-			<!-- Fin de mat-accordion -->
-		</div>
+		<app-step5-download
+			[isStepCurrent]="isStepCurrent(5)"
+			[canAccessStep]="canAccessStep(5)"
+			[isStepCompleted]="isStepCompleted(5)"
+			(nextStep)="nextStep()"
+		></app-step5-download>
+
+		<app-step5-download
+			[isStepCurrent]="true"
+			[canAccessStep]="true"
+			[isStepCompleted]="true"
+			(nextStep)="nextStep()"
+		></app-step5-download>
 	</mat-accordion>
 </div>

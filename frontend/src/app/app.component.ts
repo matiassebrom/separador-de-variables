@@ -17,6 +17,7 @@ import { Step1UploadComponent } from './components/steps/step1-upload/step1-uplo
 import { Step2SeparateByComponent } from './components/steps/step2-separate-by/step2-separate-by.component';
 import { Step3FiltersComponent } from './components/steps/step3-filters/step3-filters.component';
 import { Step4ChooseColumnsComponent } from './components/steps/step4-choose-columns/step4-choose-columns.component';
+import { Step5DownloadComponent } from './components/steps/step5-download/step5-download.component';
 
 @Component({
 	selector: 'app-root',
@@ -38,7 +39,8 @@ import { Step4ChooseColumnsComponent } from './components/steps/step4-choose-col
 		Step1UploadComponent,
 		Step2SeparateByComponent,
 		Step3FiltersComponent,
-		Step4ChooseColumnsComponent
+		Step4ChooseColumnsComponent,
+		Step5DownloadComponent
 	],
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.scss'
@@ -51,24 +53,12 @@ export class AppComponent implements OnInit {
 	currentStep = 1;
 	fileUploaded = false;
 
-	// <todo esto esta harcodeado para hacer pruebas
-
-	previewFiles = [
-		{ name: 'datos_separados - ORIGEN - WEB.xlsx', excluded: false },
-		{ name: 'datos_separados - ORIGEN - MOBILE.xlsx', excluded: false },
-		{ name: 'datos_separados - ORIGEN - EMAIL.xlsx', excluded: true }
-	];
-
 	ngOnInit() {
 		// Llamar al backend al iniciar la app
 		this.api.pingBackend().subscribe({
 			next: (resp) => console.log('Respuesta backend:', resp),
 			error: (err) => console.error('Error backend:', err)
 		});
-	}
-
-	get includedPreviewFiles() {
-		return this.previewFiles.filter((f) => !f.excluded);
 	}
 
 	nextStep() {
@@ -88,9 +78,5 @@ export class AppComponent implements OnInit {
 	onFileUpload() {
 		this.fileUploaded = true;
 		this.nextStep();
-	}
-
-	toggleFileExclusion(index: number) {
-		this.previewFiles[index].excluded = !this.previewFiles[index].excluded;
 	}
 }

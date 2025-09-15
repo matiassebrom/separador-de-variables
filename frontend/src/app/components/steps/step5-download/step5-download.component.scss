@@ -1,0 +1,60 @@
+.step-content {
+	padding: 24px;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.summary-card {
+	margin-bottom: 16px;
+}
+
+.files-preview {
+	margin: 24px 0;
+}
+
+.file-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.file-item {
+	min-width: 220px;
+	max-width: 320px;
+	margin-bottom: 8px;
+}
+
+.file-item.excluded {
+	opacity: 0.5;
+}
+
+.excluded-text {
+	text-decoration: line-through;
+	color: #b71c1c;
+}
+
+.step-actions {
+	margin-top: 24px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.large-btn {
+	font-size: 1.1em;
+	padding: 12px 32px;
+}
+
+.hint {
+	color: #888;
+	font-size: 0.95em;
+}
+
+.warn-btn {
+	color: #b71c1c;
+}
+
+.primary-btn {
+	color: #388e3c;
+}

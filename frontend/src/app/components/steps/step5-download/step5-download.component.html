@@ -1,0 +1,45 @@
+<mat-expansion-panel [expanded]="isStepCurrent" [disabled]="!canAccessStep">
+	<mat-expansion-panel-header>
+		<mat-panel-title>
+			<mat-icon>
+				{{ isStepCompleted ? 'check_circle' : isStepCurrent ? 'radio_button_checked' : 'radio_button_unchecked' }}
+			</mat-icon>
+			&nbsp; 5) Descargar archivos
+		</mat-panel-title>
+		<mat-panel-description *ngIf="baseName"> Nombre base: {{ baseName }} </mat-panel-description>
+	</mat-expansion-panel-header>
+
+	<div class="step-content">
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Nombre base para los archivos</mat-label>
+			<input matInput [(ngModel)]="baseName" placeholder="datos_separados" />
+			<mat-hint>Los archivos se nombrarán como: [base] [valor].xlsx</mat-hint>
+		</mat-form-field>
+
+		<!-- 		<div class="files-preview">
+			<h3>📁 Se generarán {{ includedPreviewFiles.length }} archivos:</h3>
+			<p class="hint">Haz clic en ✅ para excluir archivos que no quieras descargar</p>
+			<div class="file-list">
+				<mat-card *ngFor="let file of previewFiles; let i = index" class="file-item" [class.excluded]="file.excluded">
+					<mat-card-content>
+						<button
+							mat-icon-button
+							(click)="toggleFileExclusion(i)"
+							[ngClass]="file.excluded ? 'warn-btn' : 'primary-btn'"
+						>
+							<mat-icon>{{ file.excluded ? 'cancel' : 'check_circle' }}</mat-icon>
+						</button>
+						<span [class.excluded-text]="file.excluded">{{ file.name }}</span>
+					</mat-card-content>
+				</mat-card>
+			</div>
+		</div> -->
+
+		<div class="step-actions">
+			<button mat-raised-button color="accent" class="large-btn" (click)="onDownload()">
+				<mat-icon>download</mat-icon>
+				&nbsp; Generar y descargar archivos
+			</button>
+		</div>
+	</div>
+</mat-expansion-panel>

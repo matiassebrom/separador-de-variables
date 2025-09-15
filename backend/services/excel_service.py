@@ -101,7 +101,7 @@ def set_headers_to_keep(file_id: str, headers: list[str]) -> list:
             file_store[file_id]["values_to_keep_by_header"][header_to_split] = unique_values
     # Si hay al menos un header, devolver los valores únicos del primero
     if headers:
-        return get_unique_values_by_header(file_id, headers[0])
+        return headers
     return []
 
 
@@ -133,9 +133,12 @@ def generate_excels_by_value(file_id: str) -> str:
         df = df[df[header_to_filter].isin(filter_values)]
     # Iterar sobre los valores únicos de header_to_split
     unique_values_to_split = df[header_to_split].dropna().unique().tolist()
+    # Usar base_name si está seteado, si no, usar nombre original
+    base_name = data.get("base_name")
+    if not base_name:
+        original_filename = data.get("filename", "archivo")
+        base_name = original_filename.rsplit(".", 1)[0]
     # Crear un ZIP temporal
-    original_filename = data.get("filename", "archivo")
-    base_name = original_filename.rsplit(".", 1)[0]
     with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_zip:
         with zipfile.ZipFile(tmp_zip, 'w') as zipf:
             for value_to_split in unique_values_to_split:

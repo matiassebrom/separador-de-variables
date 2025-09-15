@@ -26,12 +26,23 @@
 			</button>
 		</div>
 
-		<!-- ✅ Selector de columna -->
+		<!-- ✅ Buscador y selector de columna -->
 		<div *ngIf="!isLoadingHeaders() && !errorMessage() && headers().length > 0">
 			<mat-form-field appearance="outline" class="mat-form-field-fluid">
 				<mat-label>Separar por (columna)</mat-label>
 				<mat-select [value]="selectedSeparateBy" (selectionChange)="onSeparateByChange($event.value)">
-					<mat-option *ngFor="let header of headers()" [value]="header">
+					<mat-option>
+						<input
+							matInput
+							placeholder="Buscar columna..."
+							[(ngModel)]="headerSearchTerm"
+							(click)="$event.stopPropagation()"
+							(keydown)="$event.stopPropagation()"
+							style="width: 100%"
+						/>
+					</mat-option>
+					<mat-option value="">( ninguna )</mat-option>
+					<mat-option *ngFor="let header of filteredHeaders" [value]="header">
 						{{ header }}
 					</mat-option>
 				</mat-select>

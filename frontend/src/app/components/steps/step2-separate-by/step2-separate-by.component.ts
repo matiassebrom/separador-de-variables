@@ -49,6 +49,15 @@ export class Step2SeparateByComponent implements OnChanges {
 	uniqueValues = signal<string[]>([]);
 	isSaving = signal(false);
 
+	// Buscador de headers
+	headerSearchTerm: string = '';
+	// Getter para filtrar headers según el término de búsqueda
+	get filteredHeaders(): string[] {
+		const headers = this.headers();
+		if (!this.headerSearchTerm) return headers;
+		return (headers || []).filter((h: string) => h && h.toLowerCase().includes(this.headerSearchTerm.toLowerCase()));
+	}
+
 	constructor(
 		private apiService: ApiService,
 		public fileStateService: FileStateService

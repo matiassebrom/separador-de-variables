@@ -35,10 +35,19 @@ class SetHeaderToSplitRequest(BaseModel):
     header: str
 
 
+
 # Modelo único para request y response
 class ValuesToKeepByHeader(BaseModel):
     header: str
     values: list
+
+# Modelo para el nombre base de descarga
+class SetBaseNameRequest(BaseModel):
+    base_name: str
+
+# Modelo para obtener valores únicos
+class GetUniqueValuesRequest(BaseModel):
+    header: str
 
 # ------------------- APP Y ENDPOINTS -------------------
 
@@ -131,8 +140,10 @@ def download_files(file_id: str, background_tasks: BackgroundTasks):
             print(f"Error cleaning up {zip_path}: {e}")
 
     background_tasks.add_task(cleanup)
-    
+
+    # Usar el base_name configurado para el nombre del zip
+    base_name = get_zip_base_name(file_id)
     return FileResponse(zip_path, 
-        filename=f"archivos_{file_id}.zip", 
+        filename=f"{base_name}.zip", 
         media_type="application/zip"
-    ) 
+    )

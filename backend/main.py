@@ -41,6 +41,7 @@ class ValuesToKeepByHeader(BaseModel):
     header: str
     values: list
 
+
 # Modelo para el nombre base de descarga
 class SetBaseNameRequest(BaseModel):
     base_name: str
@@ -92,6 +93,19 @@ def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueVa
     return UniqueValuesResponse(unique_values_in_header_to_split=unique_values_in_header_to_split)
 
 
+
+ # ==================== PASO 3: OBTENER VALORES ÚNICOS DE UNA COLUMNA ====================
+
+@app.get("/get_unique_values/{file_id}/{header}")
+def get_unique_values(file_id: str, header: str):
+    """
+    Devuelve los valores únicos de una columna específica del archivo subido.
+    """
+    try:
+        values = get_unique_values_by_header(file_id, header)
+        return {"unique_values": values}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 # ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ====================
 @app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)

@@ -123,13 +123,25 @@ def generate_excels_by_value(file_id: str) -> str:
 
 def check_ready_for_download(file_id: str):
     if file_id not in file_store:
-        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
+        raise HTTPException(status_code=404, detail="No se encontró el archivo subido. Por favor, vuelve a cargar el archivo.")
     data = file_store[file_id]
     required = ["df", "header_to_split", "headers_to_keep", "values_to_keep_by_header"]
+    friendly_names = {
+        "df": "archivo Excel subido",
+        "header_to_split": "columna para separar los archivos",
+        "headers_to_keep": "columnas a guardar en los archivos generados",
+        "values_to_keep_by_header": "valores a mantener para la columna seleccionada"
+    }
     for key in required:
         if key not in data or data[key] is None:
-            raise HTTPException(status_code=400, detail=f"Falta configurar: {key}")
+            raise HTTPException(
+                status_code=400,
+                detail=f"Falta configurar el paso: {friendly_names.get(key, key)}. Completa ese paso antes de descargar."
+            )
     header = data["header_to_split"]
     if header not in data["values_to_keep_by_header"]:
-        raise HTTPException(status_code=400, detail=f"Faltan valores a mantener para '{header}'")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Faltan valores a mantener para la columna '{header}'. Selecciona al menos un valor antes de descargar."
+        )
     return data

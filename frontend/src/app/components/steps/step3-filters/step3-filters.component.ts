@@ -77,7 +77,7 @@ export class Step3FiltersComponent implements OnInit, OnChanges {
 		const fileId = this.fileStateService.getCurrentFileId();
 		// Llamar al backend solo si hay fileId y header seleccionado
 		if (fileId && header) {
-			this.api.setHeadersToKeep(fileId, [header]).subscribe({
+			this.api.getUniqueValues(fileId, header).subscribe({
 				next: (resp) => {
 					this.columnValues = resp.unique_values;
 					console.log('Valores únicos recibidos:', resp.unique_values);

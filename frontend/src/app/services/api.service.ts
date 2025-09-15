@@ -3,42 +3,46 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-// ==================== PASO 1: SUBIR ARCHIVO ====================
-// Interfaces para PASO 1
+// ==================== INTERFACES ====================
+// PASO 1: SUBIR ARCHIVO
 export interface UploadFileResponse {
 	file_id: string;
 	filename: string;
 	message: string;
 }
 
-// ==================== PASO 2: ELEGIR 'SEPARAR POR' ====================
-// Interfaces para PASO 2
+// PASO 2: ELEGIR 'SEPARAR POR'
 export interface HeadersResponse {
 	headers: string[];
 }
-
 export interface UniqueValuesResponse {
 	unique_values_in_header_to_split: string[];
 }
 
-// ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ====================
-// Interfaces para PASO 3
+// PASO 3: OBTENER VALORES ÚNICOS DE UNA COLUMNA
+export interface GetUniqueValuesRequest {
+	header: string;
+}
+export interface GetUniqueValuesResponse {
+	unique_values: string[];
+}
+
+// PASO 3: CONFIGURAR FILTROS (OPCIONAL)
 export interface ValuesToKeepByHeaderRequest {
 	header: string;
 	values: string[];
 }
-
 export interface ValuesToKeepByHeaderResponse {
 	header: string;
 	values: string[];
 }
 
-// ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ====================
-// Interfaces para PASO 4
+// PASO 4: ELEGIR 'DATOS A GUARDAR'
 export interface SetHeadersToKeepResponse {
 	headers?: string[]; // opcional, para compatibilidad
 	unique_values: string[];
 }
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -47,6 +51,7 @@ export class ApiService {
 
 	constructor(private http: HttpClient) {}
 
+	// ==================== PASO 0: PING ====================
 	pingBackend(): Observable<any> {
 		return this.http.get(`${this.baseUrl}/`);
 	}
@@ -65,6 +70,11 @@ export class ApiService {
 		return this.http
 			.post<UniqueValuesResponse>(`${this.baseUrl}/set_header_to_split/${fileId}`, { header })
 			.pipe(map((response) => response.unique_values_in_header_to_split));
+	}
+
+	// ==================== PASO 3: OBTENER VALORES ÚNICOS DE UNA COLUMNA ====================
+	getUniqueValues(fileId: string, header: string): Observable<GetUniqueValuesResponse> {
+		return this.http.post<GetUniqueValuesResponse>(`${this.baseUrl}/get_unique_values/${fileId}`, { header });
 	}
 
 	// ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ====================

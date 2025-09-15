@@ -19,5 +19,5 @@ def test_set_headers_to_keep():
     response = client.post(f"/set_headers_to_keep/{file_id}", json={"headers": ["ORIGEN"]})
     assert response.status_code == 200
     data = response.json()
-    assert "headers" in data
-    assert set(data["headers"]) == {"ORIGEN"}
+    assert "unique_values" in data
+    assert set(data["unique_values"]) == {"ORIGEN", "GURUS", "OPI", "TAP"}

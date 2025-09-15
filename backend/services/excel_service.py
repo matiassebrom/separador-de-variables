@@ -1,15 +1,31 @@
+
+# ==================== IMPORTS ====================
+import os
 import tempfile
 import zipfile
-
 import pandas as pd
 import io
 import time
-from typing import Dict, TypedDict
-from typing import Optional
+from typing import Dict, TypedDict, Optional
 from fastapi import HTTPException, UploadFile
 
+# ==================== UTILIDADES ====================
+def cleanup_file(path: str):
+    try:
+        if os.path.exists(path):
+            os.unlink(path)
+    except Exception as e:
+        print(f"Error cleaning up {path}: {e}")
 
-# Definición de la estructura de cada archivo subido (similar a interface en TypeScript)
+def get_zip_base_name(file_id: str) -> str:
+    data = file_store[file_id]
+    base_name = data.get("base_name")
+    if not base_name:
+        base_name = data.get("filename", f"archivos_{file_id}")
+        base_name = base_name.rsplit('.', 1)[0]
+    return base_name
+
+# ==================== MODELOS Y ESTADO ====================
 class FileData(TypedDict, total=False):
     df: pd.DataFrame
     filename: str
@@ -17,9 +33,9 @@ class FileData(TypedDict, total=False):
     headers_to_keep: Optional[list[str]]
     values_to_keep_by_header: Optional[dict[str, list]]
 
-# Estado en memoria: id -> FileData
 file_store: Dict[str, FileData] = {}
 
+# ==================== LÓGICA PRINCIPAL ====================
 def save_uploaded_file(file: UploadFile) -> str:
     """
     Guarda el archivo Excel subido en memoria y retorna un id único.
@@ -39,7 +55,7 @@ def save_uploaded_file(file: UploadFile) -> str:
 
 def set_header_to_split(file_id: str, header: str) -> list:
     if file_id not in file_store:
-       raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
+        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
     headers = get_headers_by_id(file_id)
     if header not in headers:
         raise HTTPException(status_code=400, detail=f"Header '{header}' no está en la lista de headers")
@@ -56,7 +72,6 @@ def get_unique_values_by_header(file_id: str, header: str):
     df = file_store[file_id]["df"]
     unique_values = df[header].dropna().unique().tolist()
     return unique_values
-
 
 def set_headers_to_keep(file_id: str, headers: list[str]) -> list:
     if file_id not in file_store:

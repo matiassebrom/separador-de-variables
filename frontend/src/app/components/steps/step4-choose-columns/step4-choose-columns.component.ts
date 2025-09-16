@@ -30,15 +30,7 @@ import { FileStateService } from '../../../services/file-state.service';
 	templateUrl: './step4-choose-columns.component.html',
 	styleUrl: './step4-choose-columns.component.scss'
 })
-export class Step4ChooseColumnsComponent implements OnChanges {
-	ngOnChanges(changes: SimpleChanges) {
-		if (changes['canAccessStep'] || changes['isStepCurrent']) {
-			const fileId = this.fileStateService.fileId();
-			if (fileId && this.canAccessStep && this.isStepCurrent) {
-				this.loadHeaders();
-			}
-		}
-	}
+export class Step4ChooseColumnsComponent {
 	@Input() isStepCurrent = false;
 	@Input() canAccessStep = false;
 	@Input() isStepCompleted = false;
@@ -47,51 +39,15 @@ export class Step4ChooseColumnsComponent implements OnChanges {
 	selectedColumn: string = '';
 	selectedColumns: string[] = [];
 
-	isLoadingHeaders = signal(false);
-	headers = signal<string[]>([]);
 	headerSearchTerm: string = '';
-	errorMessage = signal<string>('');
 
 	constructor(
 		private api: ApiService,
 		public fileStateService: FileStateService
-	) {
-		// Efecto reactivo para cargar headers cuando el paso es accesible y actual
-		effect(() => {
-			const fileId = this.fileStateService.fileId();
-			const canAccess = this.canAccessStep;
-			const isCurrentStep = this.isStepCurrent;
-			if (fileId && canAccess && isCurrentStep) {
-				this.loadHeaders();
-			}
-		});
-	}
-
-	loadHeaders() {
-		const fileId = this.fileStateService.fileId();
-		if (!fileId) {
-			this.errorMessage.set('No hay archivo subido');
-			return;
-		}
-		if (this.isLoadingHeaders() || this.headers().length > 0) {
-			return;
-		}
-		this.isLoadingHeaders.set(true);
-		this.errorMessage.set('');
-		this.api.getHeaders(fileId).subscribe({
-			next: (response) => {
-				this.headers.set(response.headers);
-				this.isLoadingHeaders.set(false);
-			},
-			error: (error) => {
-				this.errorMessage.set('Error al cargar las columnas del archivo');
-				this.isLoadingHeaders.set(false);
-			}
-		});
-	}
+	) {}
 
 	get filteredHeaders(): string[] {
-		const headers = this.headers();
+		const headers = this.fileStateService.headers();
 		if (!this.headerSearchTerm) return headers;
 		return (headers || []).filter((h: string) => h && h.toLowerCase().includes(this.headerSearchTerm.toLowerCase()));
 	}
@@ -111,6 +67,19 @@ export class Step4ChooseColumnsComponent implements OnChanges {
 	}
 
 	onContinue() {
-		this.nextStep.emit();
+		const fileId = this.fileStateService.fileId();
+		if (!fileId || this.selectedColumns.length === 0) {
+			return;
+		}
+		this.api.setHeadersToKeep(fileId, this.selectedColumns).subscribe({
+			next: (resp) => {
+				console.log('Headers guardados en backend:', resp);
+				this.nextStep.emit();
+			},
+			error: (err) => {
+				console.error('Error al guardar headers en backend:', err);
+				this.nextStep.emit(); // Emitir igual para no bloquear el flujo
+			}
+		});
 	}
 }

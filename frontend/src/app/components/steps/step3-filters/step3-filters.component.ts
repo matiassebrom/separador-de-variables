@@ -125,6 +125,10 @@ export class Step3FiltersComponent implements OnInit, OnChanges {
 	}
 
 	clearFilters() {
+		this.selectedFilterColumn = '';
 		this.selectedColumnValues = [];
+		this.headerSearchTerm = '';
+		this.searchTerm = '';
+		this.columnValues = [];
 	}
 }

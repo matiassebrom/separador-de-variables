@@ -1,3 +1,9 @@
+// ...existing code...
+
+// PASO 5: NOMBRE BASE Y DESCARGAR
+export interface SetBaseNameRequest {
+	base_name: string;
+}
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -95,8 +101,11 @@ export class ApiService {
 	}
 
 	// ==================== PASO 5: NOMBRE BASE Y DESCARGAR ====================
-	// Aquí podrías agregar métodos para descargar archivos si es necesario
+	setBaseName(fileId: string, baseName: string): Observable<any> {
+		return this.http.post<any>(`${this.baseUrl}/set_base_name/${fileId}`, { base_name: baseName });
+	}
 
-	// ==================== LÓGICA PENDIENTE ====================
-	// Aquí puedes agregar métodos para pasos adicionales si es necesario
+	downloadFiles(fileId: string): Observable<Blob> {
+		return this.http.get(`${this.baseUrl}/download_files/${fileId}`, { responseType: 'blob' });
+	}
 }

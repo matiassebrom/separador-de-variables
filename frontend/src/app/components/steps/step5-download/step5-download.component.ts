@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FileStateService } from '../../../services/file-state.service';
+import { ApiService } from '../../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,24 +32,10 @@ export class Step5DownloadComponent {
 	@Input() isStepCompleted: boolean = false;
 	@Output() nextStep = new EventEmitter<void>();
 
-	// Simulación: previewFiles y lógica de exclusión. En producción, esto debe venir del FileStateService o ApiService.
-	previewFiles = [
-		{ name: 'Archivo 1', excluded: false },
-		{ name: 'Archivo 2', excluded: false },
-		{ name: 'Archivo 3', excluded: false }
-	];
-
-	get includedPreviewFiles() {
-		return this.previewFiles.filter((f) => !f.excluded);
-	}
-
-	toggleFileExclusion(index: number) {
-		if (typeof index === 'number' && this.previewFiles[index]) {
-			this.previewFiles[index].excluded = !this.previewFiles[index].excluded;
-		}
-	}
-
-	constructor(public fileState: FileStateService) {}
+	constructor(
+		public fileState: FileStateService,
+		private api: ApiService
+	) {}
 
 	get baseName() {
 		return this.fileState.baseName();
@@ -58,5 +45,35 @@ export class Step5DownloadComponent {
 		this.fileState.setBaseName(val);
 	}
 
-	onDownload() {}
+	onDownload() {
+		const fileId = this.fileState.fileId();
+		const baseName = this.baseName;
+		if (!fileId || !baseName) return;
+
+		// 1. POST para setear el nombre base
+		this.api.setBaseName(fileId, baseName).subscribe({
+			next: () => {
+				// 2. GET para descargar el archivo
+				this.api.downloadFiles(fileId).subscribe({
+					next: (blob) => {
+						// Descargar el archivo zip
+						const url = window.URL.createObjectURL(blob);
+						const a = document.createElement('a');
+						a.href = url;
+						a.download = `${baseName}.zip`;
+						document.body.appendChild(a);
+						a.click();
+						document.body.removeChild(a);
+						window.URL.revokeObjectURL(url);
+					},
+					error: (err) => {
+						alert('Error al descargar el archivo');
+					}
+				});
+			},
+			error: (err) => {
+				alert('Error al guardar el nombre base');
+			}
+		});
+	}
 }

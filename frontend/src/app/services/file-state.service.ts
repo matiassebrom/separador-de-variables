@@ -25,6 +25,9 @@ export class FileStateService {
 	// 💾 Método para guardar la respuesta del upload
 	setUploadedFile(fileInfo: UploadedFileInfo) {
 		this.uploadedFile.set(fileInfo);
+		// Quitar la extensión si existe
+		const nameWithoutExt = fileInfo.filename.replace(/\.[^/.]+$/, '');
+		this.setBaseName(nameWithoutExt);
 		console.log('📁 Archivo guardado:', fileInfo);
 	}
 

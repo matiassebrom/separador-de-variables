@@ -37,26 +37,12 @@
 			(nextStep)="nextStep()"
 		>
 		</app-step4-choose-columns>
-		<!-- 		<app-step4-choose-columns
-			[isStepCurrent]="true"
-			[canAccessStep]="true"
-			[isStepCompleted]="true"
-			(nextStep)="nextStep()"
-		>
-		</app-step4-choose-columns> -->
 
 		<!-- ==================== PASO 5: NOMBRE BASE Y DESCARGAR ==================== -->
 		<app-step5-download
 			[isStepCurrent]="isStepCurrent(5)"
 			[canAccessStep]="canAccessStep(5)"
 			[isStepCompleted]="isStepCompleted(5)"
-			(nextStep)="nextStep()"
-		></app-step5-download>
-
-		<app-step5-download
-			[isStepCurrent]="true"
-			[canAccessStep]="true"
-			[isStepCompleted]="true"
 			(nextStep)="nextStep()"
 		></app-step5-download>
 	</mat-accordion>

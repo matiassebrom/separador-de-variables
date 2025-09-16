@@ -15,17 +15,14 @@
 							(dragover)="onDragOver($event)"
 							(dragleave)="onDragLeave($event)"
 							[class.mat-elevation-z4]="isDragOver()"
-							[class.mat-primary]="isUploading()">
+							[class.mat-primary]="isUploading()"
+						>
 							@if (isUploading()) {
-							<mat-spinner diameter="40"></mat-spinner>
-							<p class="mat-body-1">Subiendo archivo...</p>
+								<mat-spinner diameter="40"></mat-spinner>
+								<p class="mat-body-1">Subiendo archivo...</p>
 							} @else {
-							<mat-icon
-								class="upload-icon"
-								color="primary"
-								>cloud_upload</mat-icon
-							>
-							<p class="mat-body-1 mat-muted">Arrastra tu archivo Excel aquí</p>
+								<mat-icon class="upload-icon" color="primary">cloud_upload</mat-icon>
+								<p class="mat-body-1 mat-muted">Arrastra tu archivo Excel aquí</p>
 							}
 
 							<input
@@ -33,24 +30,26 @@
 								type="file"
 								accept=".xlsx,.xls"
 								(change)="onFileSelected($event)"
-								style="display: none" />
+								style="display: none"
+							/>
 						</div>
 
 						@if (selectedFile(); as file) {
-						<div class="selected-file-info mat-elevation-z1">
-							<mat-icon color="primary">description</mat-icon>
-							<span class="mat-body-1">{{ file.name }}</span>
-						</div>
+							<div class="selected-file-info mat-elevation-z1">
+								<mat-icon color="primary">description</mat-icon>
+								<span class="mat-body-1">{{ file.name }}</span>
+							</div>
 						}
 
 						<!-- 📊 Estado del upload -->
 						@if (uploadStatus()) {
-						<div
-							class="mat-body-1"
-							[class.mat-error]="uploadStatus().includes('❌')"
-							[class.mat-success]="uploadStatus().includes('✓')">
-							{{ uploadStatus() }}
-						</div>
+							<div
+								class="mat-body-1"
+								[class.mat-error]="uploadStatus().includes('❌')"
+								[class.mat-success]="uploadStatus().includes('✓')"
+							>
+								{{ uploadStatus() }}
+							</div>
 						}
 					</div>
 				</div>
@@ -60,7 +59,8 @@
 						color="primary"
 						style="margin-top: 1.5rem"
 						(click)="fileInput.click()"
-						[disabled]="isUploading()">
+						[disabled]="isUploading()"
+					>
 						<mat-icon>folder_open</mat-icon>
 						Elegir archivo
 					</button>
@@ -69,15 +69,18 @@
 						color="primary"
 						[disabled]="!selectedFile() || isUploading()"
 						(click)="onFileUpload()"
-						style="margin-top: 1.5rem">
+						style="margin-top: 1.5rem"
+					>
 						@if (isUploading()) {
-						<mat-spinner diameter="16"></mat-spinner>
-						<span>Subiendo...</span>
+							<span style="display: flex; align-items: center; justify-content: center; gap: 0.5em; width: 100%">
+								<mat-spinner diameter="16"></mat-spinner>
+								<span>Subiendo...</span>
+							</span>
 						} @else {
-						<ng-container>
-							<mat-icon>cloud_upload</mat-icon>
-							<span>Subir archivo</span>
-						</ng-container>
+							<span style="display: flex; align-items: center; justify-content: center; gap: 0.5em; width: 100%">
+								<mat-icon>cloud_upload</mat-icon>
+								<span>Subir archivo</span>
+							</span>
 						}
 					</button>
 				</div>
@@ -87,20 +90,14 @@
 		<mat-card *ngIf="fileUploaded">
 			<mat-card-content>
 				<div class="success-message">
-					<mat-icon
-						color="primary"
-						class="success-icon"
-						>check_circle</mat-icon
-					>
+					<mat-icon color="primary" class="success-icon">check_circle</mat-icon>
 					<div>
 						<p class="mat-body-1">
 							<strong>Archivo:</strong> {{ fileStateService.filename() || 'excel para test.xlsx' }}
 						</p>
 						<p class="mat-body-1"><strong>File ID:</strong> {{ fileStateService.fileId() }}</p>
 						<p class="mat-body-1"><strong>Estado:</strong> ✅ Cargado exitosamente</p>
-						<p class="mat-body-2">
-							¡El archivo se cargó correctamente! Ahora puedes continuar con el siguiente paso.
-						</p>
+						<p class="mat-body-2">¡El archivo se cargó correctamente! Ahora puedes continuar con el siguiente paso.</p>
 					</div>
 				</div>
 			</mat-card-content>

@@ -1,33 +1,18 @@
 # Separador de Archivos
 
-## 🚀 Cómo ejecutar el backend (FastAPI)
+## ¿Qué hace esta aplicación?
 
-1. **Instala las dependencias** (solo la primera vez):
+Esta app permite separar y filtrar archivos Excel de manera rápida y personalizada. El usuario puede subir un archivo Excel, elegir cómo separar los datos (por columna), aplicar filtros opcionales, seleccionar qué columnas conservar y descargar los resultados en archivos separados (ZIP). El flujo es guiado paso a paso desde el frontend Angular, con backend FastAPI.
 
-    ```sh
-    pip install -r backend/requirements.txt
-    ```
+### Flujo principal:
 
-2. **Ejecuta el backend**:
+1. **Subir archivo:** Selecciona y sube tu Excel.
+2. **Elegir columna para separar:** Elige la columna por la que se dividirán los datos.
+3. **Aplicar filtros (opcional):** Filtra los valores que quieres conservar por columna.
+4. **Seleccionar columnas a guardar:** Elige qué columnas estarán en el resultado.
+5. **Definir nombre base:** Elige el nombre para los archivos generados.
+6. **Descargar archivos:** Descarga un ZIP con los archivos Excel separados según tu configuración.
 
-    - En Windows, desde la consola (cmd o PowerShell):
-
-        ```sh
-        .\run_backend.bat
-        ```
-
-    Esto iniciará el servidor FastAPI en modo desarrollo (con recarga automática) en:
-
-    [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
-3. **Probar el endpoint**:
-
-    Abre tu navegador y visita:
-
-    - [http://127.0.0.1:8000](http://127.0.0.1:8000) — Hola mundo JSON
-    - [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) — Documentación interactiva Swagger
+Ideal para separar grandes listas, segmentar datos y automatizar tareas de exportación en Excel.
 
 ---
-
-**Nota:** El backend está en `backend/` y el código legacy en `backend/legacy/`.
-uvicorn backend.main:app --reload

@@ -54,9 +54,10 @@ class GetUniqueValuesRequest(BaseModel):
 app = FastAPI()
 
 # Permitir CORS para desarrollo
+frontend_url = os.getenv("FRONTEND_URL", "*")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Cambia esto a la URL de tu frontend en producción
+    allow_origins=[frontend_url],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

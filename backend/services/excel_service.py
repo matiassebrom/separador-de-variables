@@ -1,4 +1,5 @@
 
+
 # ==================== IMPORTS ====================
 import os
 import tempfile
@@ -87,6 +88,19 @@ def get_unique_values_by_header(file_id: str, header: str):
     unique_values = df[header].dropna().unique().tolist()
     return unique_values
 
+
+
+# ==================== PASO 2: Elegir columna para mantener ====================
+def set_headers_to_keep(file_id: str, headers: list[str]) -> list[str]:
+    if file_id not in file_store:
+        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
+    df = file_store[file_id]["df"]
+    all_headers = list(df.columns)
+    for h in headers:
+        if h not in all_headers:
+            raise HTTPException(status_code=400, detail=f"Header '{h}' no está en la lista de headers")
+    file_store[file_id]["headers_to_keep"] = headers
+    return headers
 '''
 # ==================== PASO 2: ELEGIR 'SEPARAR POR' ====================
 def set_header_to_split(file_id: str, header: str) -> list:

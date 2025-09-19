@@ -10,21 +10,10 @@ from backend.services.excel_service import (
     get_headers_by_id,
     get_headers_data_by_id,
     get_unique_values_by_header,
-    set_header_to_split as set_header_to_split_service,
-    set_headers_to_keep as set_headers_to_keep_service,
-    set_values_to_keep_by_header as set_values_to_keep_by_header_service,
-    generate_excels_by_value,
     file_store,
     cleanup_file,
     get_zip_base_name,
 )
-# ==================== NUEVO ENDPOINT: HEADERS DATA ====================
-@app.get("/get_headers_data/{file_id}")
-def get_headers_data(file_id: str):
-    """
-    Devuelve un array con header, cantidad de respuestas totales y cantidad de respuestas únicas por columna.
-    """
-    return get_headers_data_by_id(file_id)
 
 
 # ------------------- MODELOS -------------------
@@ -61,6 +50,8 @@ class GetUniqueValuesRequest(BaseModel):
 
 app = FastAPI()
 
+
+
 # Permitir CORS para desarrollo
 frontend_url = os.getenv("FRONTEND_URL", "*")
 app.add_middleware(
@@ -71,11 +62,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 def read_root():
     return {"message": "¡Hola mundo desde FastAPI!"}
 
  # ==================== PASO 1: SUBIR ARCHIVO ====================
+@app.get("/get_headers_data/{file_id}")
+def get_headers_data(file_id: str):
+    """
+    Devuelve un array con header, cantidad de respuestas totales y cantidad de respuestas únicas por columna.
+    """
+    return get_headers_data_by_id(file_id)
 
 
 @app.post("/upload_file", response_model=UploadFileResponse)
@@ -104,7 +102,16 @@ def get_headers_data(file_id: str):
     return get_headers_data_by_id(file_id)
 
 
-
+@app.post("/get_unique_values/{file_id}")
+def get_unique_values(file_id: str, body: GetUniqueValuesRequest):
+    """
+    Devuelve los valores únicos de una columna específica del archivo subido.
+    """
+    try:
+        values = get_unique_values_by_header(file_id, body.header)
+        return {"unique_values": values}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
  # ==================== PASO 3: Elegir columna para mantener ====================
 
@@ -124,16 +131,7 @@ def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueVa
 
 
 
-@app.post("/get_unique_values/{file_id}")
-def get_unique_values(file_id: str, body: GetUniqueValuesRequest):
-    """
-    Devuelve los valores únicos de una columna específica del archivo subido.
-    """
-    try:
-        values = get_unique_values_by_header(file_id, body.header)
-        return {"unique_values": values}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+
 
 # ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ====================
 @app.post("/set_values_to_keep_by_header/{file_id}", response_model=ValuesToKeepByHeader)

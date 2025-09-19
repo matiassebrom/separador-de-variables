@@ -5,7 +5,6 @@ from backend.main import app
 
 client = TestClient(app)
 
-@pytest.mark.skip(reason="Función no utilizada actualmente")
 def test_get_headers():
     # Usar el archivo Excel fijo para los tests
     test_file_path = os.path.join(os.path.dirname(__file__), "excel para test.xlsx")

@@ -24,9 +24,8 @@ def test_get_headers_data():
     # Verifica que la respuesta sea una lista y tenga los campos esperados
     assert isinstance(data, list), f"La respuesta no es una lista: {data}"
     for col in data:
-        assert "column" in col, f"Falta 'column' en {col}"
-        assert "total_non_null" in col, f"Falta 'total_non_null' en {col}"
-        assert "unique_non_null" in col, f"Falta 'unique_non_null' en {col}"
-        assert isinstance(col["unique_non_null"], list), f"'unique_non_null' no es lista en {col}"
+        assert "header" in col, f"Falta 'header' en {col}"
+        assert "total_count" in col, f"Falta 'total_count' en {col}"
+        assert "unique_count" in col, f"Falta 'unique_count' en {col}"
 
     # Comentario: Si este test falla, revisar el endpoint /get_headers_data/{file_id} y los datos del archivo de test.

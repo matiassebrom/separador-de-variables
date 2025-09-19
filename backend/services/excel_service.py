@@ -81,7 +81,11 @@ def get_headers_data_by_id(file_id: str):
         })
     return result
 
-
+def get_unique_values_by_header(file_id: str, header: str):
+    # Se asume que file_id y header ya fueron validados
+    df = file_store[file_id]["df"]
+    unique_values = df[header].dropna().unique().tolist()
+    return unique_values
 
 '''
 # ==================== PASO 2: ELEGIR 'SEPARAR POR' ====================
@@ -97,11 +101,7 @@ def set_header_to_split(file_id: str, header: str) -> list:
 
 
 # ==================== PASO 3: OBTENER VALORES ÚNICOS DE UNA COLUMNA ====================
-def get_unique_values_by_header(file_id: str, header: str):
-    # Se asume que file_id y header ya fueron validados
-    df = file_store[file_id]["df"]
-    unique_values = df[header].dropna().unique().tolist()
-    return unique_values
+
 
 
 # ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ====================

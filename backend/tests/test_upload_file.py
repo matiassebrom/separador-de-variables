@@ -5,7 +5,7 @@ from backend.main import app
 
 client = TestClient(app)
 
-@pytest.mark.skip(reason="Función no utilizada actualmente")
+
 def test_upload_file():
     # Usar el archivo Excel fijo para los tests
     test_file_path = os.path.join(os.path.dirname(__file__), "excel para test.xlsx")
@@ -29,3 +29,4 @@ def test_upload_file():
     assert "file_id" in data and data["file_id"], "No se retornó file_id o está vacío"
 
     # Comentario: Si este test falla, revisar el endpoint /upload_file y el modelo UploadFileResponse.
+

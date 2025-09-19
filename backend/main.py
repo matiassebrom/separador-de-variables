@@ -96,6 +96,14 @@ def get_headers(file_id: str) -> HeadersResponse:
     headers = get_headers_by_id(file_id)
     return HeadersResponse(headers=headers)
 
+@app.get("/get_headers_data/{file_id}")
+def get_headers_data(file_id: str):
+    """
+    Devuelve un array con header, cantidad de respuestas totales y cantidad de respuestas únicas por columna.
+    """
+    return get_headers_data_by_id(file_id)
+
+
 
 
  # ==================== PASO 3: Elegir columna para mantener ====================

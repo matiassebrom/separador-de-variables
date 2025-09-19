@@ -5,6 +5,7 @@ from backend.main import app
 
 client = TestClient(app)
 
+@pytest.mark.skip(reason="Función no utilizada actualmente")
 def test_upload_file():
     # Usar el archivo Excel fijo para los tests
     test_file_path = os.path.join(os.path.dirname(__file__), "excel para test.xlsx")

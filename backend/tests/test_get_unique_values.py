@@ -2,6 +2,8 @@ import os
 from fastapi.testclient import TestClient
 from backend.main import app
 
+import pytest
+@pytest.mark.skip(reason="Función no utilizada actualmente")
 def test_get_unique_values_by_header_endpoint():
     client = TestClient(app)
     test_file_path = os.path.join(os.path.dirname(__file__), "excel para test.xlsx")

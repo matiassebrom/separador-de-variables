@@ -8,6 +8,7 @@ from typing import List
 from backend.services.excel_service import (
     save_uploaded_file,
     get_headers_by_id,
+    get_headers_data_by_id,
     get_unique_values_by_header,
     set_header_to_split as set_header_to_split_service,
     set_headers_to_keep as set_headers_to_keep_service,
@@ -17,6 +18,13 @@ from backend.services.excel_service import (
     cleanup_file,
     get_zip_base_name,
 )
+# ==================== NUEVO ENDPOINT: HEADERS DATA ====================
+@app.get("/get_headers_data/{file_id}")
+def get_headers_data(file_id: str):
+    """
+    Devuelve un array con header, cantidad de respuestas totales y cantidad de respuestas únicas por columna.
+    """
+    return get_headers_data_by_id(file_id)
 
 
 # ------------------- MODELOS -------------------
@@ -67,6 +75,9 @@ app.add_middleware(
 def read_root():
     return {"message": "¡Hola mundo desde FastAPI!"}
 
+ # ==================== PASO 1: SUBIR ARCHIVO ====================
+
+
 @app.post("/upload_file", response_model=UploadFileResponse)
 async def upload_file(file: UploadFile = File(...)) -> UploadFileResponse:
     """
@@ -76,6 +87,9 @@ async def upload_file(file: UploadFile = File(...)) -> UploadFileResponse:
     filename = file.filename if file.filename is not None else "archivo.xlsx"
     return UploadFileResponse(file_id=file_id, filename=filename, message="Archivo cargado exitosamente")
 
+ # ==================== PASO 2: Elegir columna para separar ====================
+ #obtener informacion de los headers
+
 @app.get("/get_headers/{file_id}", response_model=HeadersResponse)
 def get_headers(file_id: str) -> HeadersResponse:
     """Obtiene los headers del archivo especificado por file_id."""
@@ -83,6 +97,11 @@ def get_headers(file_id: str) -> HeadersResponse:
     return HeadersResponse(headers=headers)
 
 
+
+ # ==================== PASO 3: Elegir columna para mantener ====================
+
+'''
+ # ==================== PASO 2: Elegir columna para separar ====================
 @app.post("/set_header_to_split/{file_id}", response_model=UniqueValuesResponse)
 def set_header_to_split(file_id: str, body: SetHeaderToSplitRequest) -> UniqueValuesResponse:
     """
@@ -148,3 +167,4 @@ def download_files(file_id: str, background_tasks: BackgroundTasks):
         filename=f"{base_name}.zip", 
         media_type="application/zip"
     )
+'''

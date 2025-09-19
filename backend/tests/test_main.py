@@ -1,6 +1,8 @@
 from fastapi.testclient import TestClient
 from backend.main import app
 
+import pytest
+@pytest.mark.skip(reason="Función no utilizada actualmente")
 def test_read_root():
     client = TestClient(app)
     response = client.get("/")

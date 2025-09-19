@@ -4,6 +4,8 @@ from backend.main import app
 
 client = TestClient(app)
 
+import pytest
+@pytest.mark.skip(reason="Función no utilizada actualmente")
 def test_set_headers_to_keep():
     # Usar el archivo Excel fijo para los tests
     test_file_path = os.path.join(os.path.dirname(__file__), "excel para test.xlsx")
@@ -32,6 +34,7 @@ def test_set_headers_to_keep():
     # Comentario: Si este test falla, revisar el endpoint /set_headers_to_keep/{file_id} y la lógica de filtrado.
 
 
+@pytest.mark.skip(reason="Función no utilizada actualmente")
 def test_set_headers_to_keep_multiple():
     """Testea el endpoint con múltiples headers"""
     test_file_path = os.path.join(os.path.dirname(__file__), "excel para test.xlsx")

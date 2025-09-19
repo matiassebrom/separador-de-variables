@@ -26,15 +26,13 @@ def get_zip_base_name(file_id: str) -> str:
     return base_name
 
 # ==================== MODELOS Y ESTADO ====================
+
 class FileData(TypedDict, total=False):
     df: pd.DataFrame
     filename: str
-    header_to_split: Optional[str]
-    header_to_filter: Optional[str]  # Nuevo campo
-    headers_to_keep: Optional[list[str]]
-    # Paso 3: filtro independiente
-    header_to_filter: Optional[str]
-    values_to_keep_by_header: Optional[dict[str, list]]
+    headers_to_keep: Optional[list[str]]      # Columnas que se mantienen en todos los archivos
+    headers_to_split: Optional[list[str]]     # Columnas por las que se divide (múltiples)
+    base_name: Optional[str]                  # Nombre base para archivos generados
 
 file_store: Dict[str, FileData] = {}
 
@@ -58,6 +56,34 @@ def save_uploaded_file(file: UploadFile) -> str:
     return file_id
 
 
+def get_headers_by_id(file_id: str):
+    df = file_store[file_id]["df"]
+    return list(df.columns)
+
+def get_headers_data_by_id(file_id: str):
+    """
+    Devuelve un array de dicts con:
+    - header: nombre de la columna
+    - total_count: cantidad de respuestas (no nulos)
+    - unique_count: cantidad de respuestas únicas (no nulos)
+    """
+    if file_id not in file_store:
+        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
+    df = file_store[file_id]["df"]
+    result = []
+    for col in df.columns:
+        total_count = df[col].dropna().shape[0]
+        unique_count = df[col].dropna().nunique()
+        result.append({
+            "header": col,
+            "total_count": total_count,
+            "unique_count": unique_count
+        })
+    return result
+
+
+
+'''
 # ==================== PASO 2: ELEGIR 'SEPARAR POR' ====================
 def set_header_to_split(file_id: str, header: str) -> list:
     if file_id not in file_store:
@@ -68,12 +94,6 @@ def set_header_to_split(file_id: str, header: str) -> list:
     file_store[file_id]["header_to_split"] = header
     unique_values_in_header_to_split = get_unique_values_by_header(file_id, header)
     return unique_values_in_header_to_split
-
-
-# ==================== PASO 2: ELEGIR 'SEPARAR POR' ====================
-def get_headers_by_id(file_id: str):
-    df = file_store[file_id]["df"]
-    return list(df.columns)
 
 
 # ==================== PASO 3: OBTENER VALORES ÚNICOS DE UNA COLUMNA ====================
@@ -182,3 +202,4 @@ def check_ready_for_download(file_id: str):
             detail=f"Faltan valores a mantener para la columna '{header}'. Selecciona al menos un valor antes de descargar."
         )
     return data
+'''

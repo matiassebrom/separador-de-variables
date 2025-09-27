@@ -11,7 +11,7 @@
 		<!-- ==================== PASO 1: SUBIR ARCHIVO ==================== -->
 		<app-step1-upload [fileUploaded]="fileUploaded" (fileUpload)="onFileUpload()"> </app-step1-upload>
 
-		<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
+	<!-- 	<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
 		<app-step2-separate-by
 			[isStepCurrent]="isStepCurrent(2)"
 			[canAccessStep]="canAccessStep(2)"
@@ -44,6 +44,6 @@
 			[canAccessStep]="canAccessStep(5)"
 			[isStepCompleted]="isStepCompleted(5)"
 			(nextStep)="nextStep()"
-		></app-step5-download>
+		></app-step5-download> -->
 	</mat-accordion>
 </div>

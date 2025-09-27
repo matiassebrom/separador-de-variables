@@ -101,6 +101,69 @@ def set_headers_to_keep(file_id: str, headers: list[str]) -> list[str]:
             raise HTTPException(status_code=400, detail=f"Header '{h}' no está en la lista de headers")
     file_store[file_id]["headers_to_keep"] = headers
     return headers
+
+# ==================== PASO 3: Elegir columna para separar ====================
+def set_headers_to_split(file_id: str, headers: list[str]) -> list:
+    if file_id not in file_store:
+        raise HTTPException(status_code=404, detail="ID de archivo no encontrado")
+    df = file_store[file_id]["df"]
+    all_headers = list(df.columns)
+    for header in headers:
+        if header not in all_headers:
+            raise HTTPException(status_code=400, detail=f"Header '{header}' no está en la lista de headers")
+    file_store[file_id]["headers_to_split"] = headers
+    # quiero revolver la cantidad de headers que se van a separar
+    return len(headers)
+
+# ==================== PASO 5: GENERAR Y DESCARGAR ARCHIVOS ====================
+def generate_excels_by_value(file_id: str) -> str:
+    data = check_ready_for_download(file_id)
+    df = data["df"]
+    headers_to_split = data["headers_to_split"]
+    headers_to_keep = data["headers_to_keep"]
+
+    base_name = data.get("base_name")
+    if not base_name:
+        original_filename = data.get("filename", "archivo")
+        base_name = original_filename.rsplit(".", 1)[0]
+    if not headers_to_split:
+        raise HTTPException(status_code=400, detail="No se especificó columna para dividir.")
+
+    # Generar un archivo por cada columna de split, con las columnas a mantener + la columna de split
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_zip:
+        with zipfile.ZipFile(tmp_zip, 'w') as zipf:
+            for split_column in headers_to_split:
+                # Crear un excel con las columnas a mantener + la columna de split
+                cols_to_include = list(headers_to_keep)
+                if split_column not in cols_to_include:
+                    cols_to_include.append(split_column)
+                split_df = df[cols_to_include]
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp_xlsx:
+                    split_df.to_excel(tmp_xlsx.name, index=False)
+                    arcname = f"{base_name} {split_column}.xlsx"
+                    zipf.write(tmp_xlsx.name, arcname=arcname)
+        return tmp_zip.name
+
+
+# ==================== PASO 5: GENERAR Y DESCARGAR ARCHIVOS ====================
+def check_ready_for_download(file_id: str):
+    if file_id not in file_store:
+        raise HTTPException(status_code=404, detail="No se encontró el archivo subido. Por favor, vuelve a cargar el archivo.")
+    data = file_store[file_id]
+    required = ["df", "headers_to_split", "headers_to_keep"]
+    friendly_names = {
+        "df": "archivo Excel subido",
+        "headers_to_split": "columnas para separar los archivos",
+        "headers_to_keep": "columnas a guardar en los archivos generados"
+    }
+    for key in required:
+        if key not in data or data[key] is None:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Falta configurar el paso: {friendly_names.get(key, key)}. Completa ese paso antes de descargar."
+            )
+    return data
+
 '''
 # ==================== PASO 2: ELEGIR 'SEPARAR POR' ====================
 def set_header_to_split(file_id: str, header: str) -> list:

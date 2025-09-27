@@ -21,9 +21,10 @@ def test_get_headers_data():
     assert response.status_code == 200, f"Status inesperado al obtener datos de headers: {response.status_code}, body: {response.text}"
     data = response.json()
 
-    # Verifica que la respuesta sea una lista y tenga los campos esperados
-    assert isinstance(data, list), f"La respuesta no es una lista: {data}"
-    for col in data:
+    # Verifica que la respuesta tenga la clave 'headers_data' y sea una lista
+    assert "headers_data" in data, f"La respuesta no contiene 'headers_data': {data}"
+    assert isinstance(data["headers_data"], list), f"'headers_data' no es una lista: {data}"
+    for col in data["headers_data"]:
         assert "header" in col, f"Falta 'header' en {col}"
         assert "total_count" in col, f"Falta 'total_count' en {col}"
         assert "unique_count" in col, f"Falta 'unique_count' en {col}"

@@ -25,6 +25,7 @@ class UploadFileResponse(BaseModel):
     filename: str
     message: str
 
+
 class HeadersResponse(BaseModel):
     headers: List[str]
 
@@ -33,6 +34,15 @@ class UniqueValuesResponse(BaseModel):
 
 class SetHeaderToSplitRequest(BaseModel):
     header: str
+
+# Modelo para la respuesta de get_headers_data
+class HeaderDataItem(BaseModel):
+    header: str
+    total_count: int
+    unique_count: int
+
+class GetHeadersDataResponse(BaseModel):
+    headers_data: List[HeaderDataItem]
 
 
 
@@ -89,12 +99,14 @@ def get_headers(file_id: str) -> HeadersResponse:
     return HeadersResponse(headers=headers)
 
 
-@app.get("/get_headers_data/{file_id}")
-def get_headers_data(file_id: str):
+
+@app.get("/get_headers_data/{file_id}", response_model=GetHeadersDataResponse)
+def get_headers_data(file_id: str) -> GetHeadersDataResponse:
     """
     Devuelve un array con header, cantidad de respuestas totales y cantidad de respuestas únicas por columna.
     """
-    return get_headers_data_by_id(file_id)
+    items = get_headers_data_by_id(file_id)
+    return GetHeadersDataResponse(headers_data=[HeaderDataItem(**item) for item in items])
 
 
 @app.post("/get_unique_values/{file_id}")

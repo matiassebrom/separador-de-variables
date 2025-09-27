@@ -1,23 +1,17 @@
 export type StepId =
   | 'upload'
-  | 'headers'
-  | 'separate'
-  | 'filters'
-  | 'keep'
-  | 'naming'
-  | 'generate';
+  | 'columns-to-keep'
+  | 'columns-to-split'
+  | 'naming-download';
 
 export interface WizardCtx {
-  // Estado compartido entre pasos (ejemplo actual de la app Excel)
-  df?: unknown;                         // dataset/tabla cargada
-  columns?: string[];
-  separateBy?: string;
-  filters?: Record<string, string[]>;   // col -> valores permitidos
-  keepCols?: string[];
+  // Estado compartido entre pasos
+  fileId?: string;
+  headers?: string[];
+  headersData?: any[];
+  headersToKeep?: string[];
+  headersToSplit?: string[];
   baseName?: string;
-
-  // Caches y derivados
-  uniquesCache?: Record<string, string[]>; // col -> valores únicos cacheados
 }
 
 export interface StepDef {

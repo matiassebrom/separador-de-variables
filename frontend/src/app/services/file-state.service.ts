@@ -7,63 +7,72 @@ import { UploadedFileInfo } from '../interfaces/UploadedFileInfo.interface';
 	providedIn: 'root'
 })
 export class FileStateService {
-	// 🎯 Signal que guarda la información del archivo
+	// === Signals ===
 	private uploadedFile = signal<UploadedFileInfo | null>(null);
-
-	// 🎯 Signal para los headers del archivo
 	private _headers = signal<string[]>([]);
-	headers = computed(() => this._headers());
+	private _headersData = signal<HeaderDataItem[]>([]);
+	private _headersToKeep = signal<string[]>([]);
+	private _headersToSplit = signal<string[]>([]);
+	private _baseName = signal<string>('');
 
-	// 📖 Computed signals para acceder a la información
+	// === Computed ===
+	headers = computed(() => this._headers());
+	headersData = computed(() => this._headersData());
+	headersToKeep = computed(() => this._headersToKeep());
+	headersToSplit = computed(() => this._headersToSplit());
+	baseName = computed(() => this._baseName());
 	fileId = computed(() => this.uploadedFile()?.file_id ?? null);
 	filename = computed(() => this.uploadedFile()?.filename ?? null);
 	hasFile = computed(() => this.uploadedFile() !== null);
 
-	// 💾 Método para guardar la respuesta del upload
+	// === Métodos para modificar el estado ===
 	setUploadedFile(fileInfo: UploadedFileInfo) {
 		this.uploadedFile.set(fileInfo);
-		// Quitar la extensión si existe
 		const nameWithoutExt = fileInfo.filename.replace(/\.[^/.]+$/, '');
 		this.setBaseName(nameWithoutExt);
 		console.log('📁 Archivo guardado:', fileInfo);
 	}
 
-	// Método para guardar los headers
 	setHeaders(headers: string[]) {
 		this._headers.set(headers);
 		console.log('📋 Headers guardados:', headers);
 	}
 
-	// 🗑️ Método para limpiar el estado
-	clearFile() {
-		this.uploadedFile.set(null);
-		this._headers.set([]);
+	setHeadersData(headersData: HeaderDataItem[]) {
+		this._headersData.set(headersData);
+		console.log('📋 HeadersData guardados:', headersData);
 	}
 
-	// 📋 Método para obtener el file_id actual
-	getCurrentFileId(): string | null {
-		return this.fileId();
+	setHeadersToKeep(headers: string[]) {
+		this._headersToKeep.set(headers);
+		console.log('📋 HeadersToKeep guardados:', headers);
 	}
 
-	// Signal para el nombre base de los archivos
-	private _baseName = signal<string>('');
-	baseName = computed(() => this._baseName());
+	setHeadersToSplit(headers: string[]) {
+		this._headersToSplit.set(headers);
+		console.log('📋 HeadersToSplit guardados:', headers);
+	}
 
 	setBaseName(name: string) {
 		this._baseName.set(name);
 	}
 
+	// === Métodos utilitarios ===
 	getBaseName(): string {
 		return this._baseName();
 	}
 
-	    // Método para guardar los datos completos de los headers
-    private _headersData = signal<HeaderDataItem[]>([]);
-    headersData = computed(() => this._headersData());
+	getCurrentFileId(): string | null {
+		return this.fileId();
+	}
 
-    setHeadersData(headersData: HeaderDataItem[]) {
-        this._headersData.set(headersData);
-        console.log('📋 HeadersData guardados:', headersData);
-    }
+	clearFile() {
+		this.uploadedFile.set(null);
+		this._headers.set([]);
+		this._headersData.set([]);
+		this._headersToKeep.set([]);
+		this._headersToSplit.set([]);
+		this._baseName.set('');
+	}
 }
 

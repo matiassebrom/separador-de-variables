@@ -1,10 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
+import { HeaderDataItem } from '../interfaces/header-data-item.interface';
+import { UploadedFileInfo } from '../interfaces/UploadedFileInfo.interface';
 
-export interface UploadedFileInfo {
-	file_id: string;
-	filename: string;
-	message: string;
-}
 
 @Injectable({
 	providedIn: 'root'
@@ -59,4 +56,14 @@ export class FileStateService {
 	getBaseName(): string {
 		return this._baseName();
 	}
+
+	    // Método para guardar los datos completos de los headers
+    private _headersData = signal<HeaderDataItem[]>([]);
+    headersData = computed(() => this._headersData());
+
+    setHeadersData(headersData: HeaderDataItem[]) {
+        this._headersData.set(headersData);
+        console.log('📋 HeadersData guardados:', headersData);
+    }
 }
+

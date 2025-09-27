@@ -76,7 +76,7 @@ export class Step3FiltersComponent implements OnInit, OnChanges {
 		if (!this.headerSearchTerm) return headers;
 		return (headers || []).filter((h: string) => h && h.toLowerCase().includes(this.headerSearchTerm.toLowerCase()));
 	}
-
+/* 
 	onFilterColumnChange(header: string) {
 		this.selectedFilterColumn = header;
 		const fileId = this.fileStateService.getCurrentFileId();
@@ -130,5 +130,5 @@ export class Step3FiltersComponent implements OnInit, OnChanges {
 		this.headerSearchTerm = '';
 		this.searchTerm = '';
 		this.columnValues = [];
-	}
+	} */
 }

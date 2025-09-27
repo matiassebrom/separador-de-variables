@@ -1,58 +1,12 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { UploadFileResponse } from '../interfaces/upload-file-response.interface';
+import { HeadersResponse } from '../interfaces/headers-response.interface';
+import { SetHeadersToKeepResponse } from '../interfaces/set-headers-to-keep-response.interface';
 
-// ==================== INTERFACES ====================
-
-
-
-
-// PASO 1: SUBIR ARCHIVO
-export interface UploadFileResponse {
-	file_id: string;
-	filename: string;
-	message: string;
-}
-
-// PASO 2: ELEGIR 'SEPARAR POR'
-export interface HeadersResponse {
-	headers: string[];
-}
-export interface UniqueValuesResponse {
-	unique_values_in_header_to_split: string[];
-}
-
-// PASO 3: OBTENER VALORES ÚNICOS DE UNA COLUMNA
-export interface GetUniqueValuesRequest {
-	header: string;
-}
-export interface GetUniqueValuesResponse {
-	unique_values: string[];
-}
-
-// PASO 3: CONFIGURAR FILTROS (OPCIONAL)
-export interface ValuesToKeepByHeaderRequest {
-	header: string;
-	values: string[];
-}
-export interface ValuesToKeepByHeaderResponse {
-	header: string;
-	values: string[];
-}
-
-// PASO 4: ELEGIR 'DATOS A GUARDAR'
-export interface SetHeadersToKeepResponse {
-	headers?: string[]; // opcional, para compatibilidad
-	unique_values: string[];
-}
-
-// PASO 5: NOMBRE BASE Y DESCARGAR
-export interface SetBaseNameRequest {
-	base_name: string;
-}
 
 @Injectable({
 	providedIn: 'root'
@@ -81,14 +35,6 @@ export class ApiService {
 	getHeadersData(fileId: string): Observable<any> {
 		return this.http.get(`${this.baseUrl}/get_headers_data/${fileId}`);
 	}
-
-	// ==================== OBTENER VALORES ÚNICOS ====================
-	getUniqueValues(fileId: string, header: string): Observable<string[]> {
-		return this.http.post<GetUniqueValuesResponse>(`${this.baseUrl}/get_unique_values/${fileId}`, { header }).pipe(
-			map(r => r.unique_values)
-		);
-	}
-
 
 	// ==================== ELEGIR 'DATOS A GUARDAR' ====================
 	setHeadersToKeep(fileId: string, headers: string[]): Observable<string[]> {

@@ -2,8 +2,8 @@
 <div class="app-container">
 	<mat-card class="header-card">
 		<mat-card-header>
-			<mat-card-title>🗂️ Split & Filter Excel</mat-card-title>
-			<mat-card-subtitle>Flujo por etapas para dividir y filtrar archivos Excel</mat-card-subtitle>
+			<mat-card-title>🗂️ Separador de variables</mat-card-title>
+			<mat-card-subtitle>Flujo por etapas para dividir un archivo por variables</mat-card-subtitle>
 		</mat-card-header>
 	</mat-card>
 
@@ -11,7 +11,7 @@
 		<!-- ==================== PASO 1: SUBIR ARCHIVO ==================== -->
 		<app-step1-upload [fileUploaded]="fileUploaded" (fileUpload)="onFileUpload()"> </app-step1-upload>
 
-	<!-- 	<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
+		<!-- ==================== PASO 2: ELEGIR 'SEPARAR POR' ==================== -->
 		<app-step2-separate-by
 			[isStepCurrent]="isStepCurrent(2)"
 			[canAccessStep]="canAccessStep(2)"
@@ -19,7 +19,7 @@
 			(nextStep)="nextStep()"
 		>
 		</app-step2-separate-by>
-
+<!--
 		<!-- ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ==================== -->
 		<app-step3-filters
 			[isStepCurrent]="isStepCurrent(3)"

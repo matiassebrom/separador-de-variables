@@ -70,26 +70,33 @@ export class Step2SeparateByComponent implements OnChanges {
 		this.selectedSeparateBy = value;
 	}
 
-/* 	onContinueClick() {
+
+	// Paso 2: seleccionar columnas a mantener
+	selectedHeadersToKeep: string[] = [];
+
+	onHeadersToKeepChange(headers: string[]) {
+		this.selectedHeadersToKeep = headers;
+	}
+
+	onContinueClick() {
 		const fileId = this.fileStateService.fileId();
-		const header = this.selectedSeparateBy;
-		if (!fileId || !header) {
-			this.errorMessage.set('Selecciona una columna para separar');
+		const headers = this.selectedHeadersToKeep;
+		if (!fileId || headers.length === 0) {
+			this.errorMessage.set('Selecciona al menos una columna a mantener');
 			return;
 		}
 		this.isSaving.set(true);
-		this.apiService.setHeaderToSplitAndGetValues(fileId, header).subscribe({
-			next: (uniqueValues: string[]) => {
-				console.log('✅ Valores únicos recibidos:', uniqueValues);
-				this.uniqueValues.set(uniqueValues);
+		this.apiService.setHeadersToKeep(fileId, headers).subscribe({
+			next: () => {
+				this.fileStateService.setHeadersToKeep(headers);
 				this.isSaving.set(false);
 				this.nextStep.emit();
 			},
 			error: (error) => {
 				this.isSaving.set(false);
-				this.errorMessage.set('Error al guardar el header de separación');
-				console.error('Error al hacer set_header_to_split:', error);
+				this.errorMessage.set('Error al guardar columnas a mantener');
+				console.error('Error al hacer setHeadersToKeep:', error);
 			}
 		});
-	} */
+	}
 }

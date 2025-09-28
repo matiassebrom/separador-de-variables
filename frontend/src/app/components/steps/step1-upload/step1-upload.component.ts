@@ -98,6 +98,7 @@ export class Step1UploadComponent {
 						// Guardar solo los nombres de los headers en el estado global
 						const headers = headersResp.headers_data.map(h => h.header);
 						this.fileStateService.setHeaders(headers);
+						this.fileStateService.setHeadersData(headersResp.headers_data);
 						console.log('Headers guardados en FileStateService:', headers);
 						this.fileUpload.emit();
 					},

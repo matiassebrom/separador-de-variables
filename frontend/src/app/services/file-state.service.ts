@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HeaderDataItem } from '../interfaces/header-data-item.interface';
-import { UploadedFileInfo } from '../interfaces/UploadedFileInfo.interface';
+import { UploadedFileInfo } from '../interfaces/uploadedFileInfo.interface';
 
 
 @Injectable({

@@ -3,46 +3,68 @@
 		<mat-panel-title>
 			<mat-icon>{{
 				isStepCompleted ? 'check_circle' : isStepCurrent ? 'radio_button_checked' : 'radio_button_unchecked'
-			}}</mat-icon>
-			&nbsp; 2) Elegir 'Separar por'
+				}}</mat-icon>
+			&nbsp; 2) Elegir 'Variables a mantener'
 		</mat-panel-title>
-		<mat-panel-description *ngIf="isStepCompleted"> Separar por: {{ selectedSeparateBy }} </mat-panel-description>
+		<mat-panel-description *ngIf="isStepCompleted"> 
+			Variables seleccionadas: {{ getSelectedHeaderNames().join(', ') }}
+		</mat-panel-description>
 	</mat-expansion-panel-header>
 
-	<div class="step-content">
-		<!-- ✅ Buscador y selector de columna -->
-		<div *ngIf="fileStateService.hasFile() && fileStateService.headers().length > 0">
-			<mat-form-field appearance="outline" class="mat-form-field-fluid">
-				<mat-label>Separar por (columna)</mat-label>
-				<mat-select [value]="selectedSeparateBy" (selectionChange)="onSeparateByChange($event.value)">
-					<mat-option>
-						<input
-							matInput
-							placeholder="Buscar columna..."
-							[(ngModel)]="headerSearchTerm"
-							(click)="$event.stopPropagation()"
-							(keydown)="$event.stopPropagation()"
-							style="width: 100%"
-						/>
-					</mat-option>
-					<mat-option value="">( ninguna )</mat-option>
-					<mat-option *ngFor="let header of filteredHeaders" [value]="header">
-						{{ header }}
-					</mat-option>
-				</mat-select>
-			</mat-form-field>
 
+
+	<div class="step-content">
+
+		<div *ngIf="fileStateService.hasFile() && fileStateService.headers().length > 0">
+			<div class="search-container">
+				<input type="text" [(ngModel)]="headerSearchTerm" placeholder="Buscar header..." class="search-input" />
+			</div>
+			<div class="table-container">
+				<table class="styled-table">
+					<thead>
+						<tr>
+							<th>Seleccionar</th>
+							<th (click)="onSort('header')" style="cursor:pointer">
+								Header
+								<span *ngIf="sortColumn === 'header'">
+									<span *ngIf="sortDirection === 'desc'">&#8595;</span>
+									<span *ngIf="sortDirection === 'asc'">&#8593;</span>
+								</span>
+							</th>
+							<th (click)="onSort('total_count')" style="cursor:pointer">
+								Cantidad de datos
+								<span *ngIf="sortColumn === 'total_count'">
+									<span *ngIf="sortDirection === 'desc'">&#8595;</span>
+									<span *ngIf="sortDirection === 'asc'">&#8593;</span>
+								</span>
+							</th>
+							<th (click)="onSort('unique_count')" style="cursor:pointer">
+								Cantidad de datos únicos
+								<span *ngIf="sortColumn === 'unique_count'">
+									<span *ngIf="sortDirection === 'desc'">&#8595;</span>
+									<span *ngIf="sortDirection === 'asc'">&#8593;</span>
+								</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let h of filteredHeaders">
+							<td style="text-align: center;">
+								<input type="checkbox" [(ngModel)]="h.selected" />
+							</td>
+							<td>{{ h.header }}</td>
+							<td style="text-align: center;">{{ h.total_count }}</td>
+							<td style="text-align: center;">{{ h.unique_count }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 			<div class="step-actions">
-<!-- 				<button mat-raised-button color="primary" [disabled]="!selectedSeparateBy" (click)="onContinueClick()">
+				<button mat-raised-button color="primary" [disabled]="!hasSelectedHeaders()" (click)="onContinueClick()">
 					Continuar
-				</button> -->
+				</button>
 			</div>
 		</div>
-
-		<!-- 📝 Información adicional -->
-		<div *ngIf="!fileStateService.hasFile()" class="info-state mat-body-1">
-			<mat-icon color="accent">info</mat-icon>
-			<span>Primero debes subir un archivo en el paso anterior</span>
-		</div>
 	</div>
+
 </mat-expansion-panel>

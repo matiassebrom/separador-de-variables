@@ -34,34 +34,26 @@ import { FileStateService } from '../../../services/file-state.service';
 	templateUrl: './step2-separate-by.component.html',
 	styleUrl: './step2-separate-by.component.scss'
 })
+
 export class Step2SeparateByComponent implements OnChanges {
-		sortColumn: 'header' | 'total_count' | 'unique_count' | '' = '';
-		sortDirection: 'asc' | 'desc' = 'desc';
+	sortColumn: 'header' | 'total_count' | 'unique_count' | '' = '';
+	sortDirection: 'asc' | 'desc' = 'desc';
 
-		@Input() isStepCurrent = false;
-		@Input() canAccessStep = false;
-		@Input() isStepCompleted = false;
+	@Input() isStepCurrent = false;
+	@Input() canAccessStep = false;
+	@Input() isStepCompleted = false;
 
-		@Output() nextStep = new EventEmitter<void>();
-		selectedSeparateBy = '';
+	@Output() nextStep = new EventEmitter<void>();
 
-		// 🎯 Signals para estado reactivo
-		isLoadingHeaders = signal(false);
-		errorMessage = signal<string>('');
-		uniqueValues = signal<string[]>([]);
-		isSaving = signal(false);
+	isLoadingHeaders = signal(false);
+	errorMessage = signal<string>('');
+	uniqueValues = signal<string[]>([]);
+	isSaving = signal(false);
 
-		// Buscador de headers
-		headerSearchTerm: string = '';
+	headerSearchTerm: string = '';
+	selectedHeaders: string[] = [];
 
-	ngOnChanges(changes: SimpleChanges): void {
-		const headers = this.headers;
-		if (headers && Array.isArray(headers)) {
-			headers.forEach((h: any) => {
-				if (h.selected === undefined) h.selected = false;
-			});
-		}
-	}
+	ngOnChanges(changes: SimpleChanges): void {}
 
 	get headers() {
 		return this.fileStateService.headersData();
@@ -74,32 +66,37 @@ export class Step2SeparateByComponent implements OnChanges {
 
 	onSort(column: 'header' | 'total_count' | 'unique_count') {
 		if (this.sortColumn === column) {
-			// Si ya estamos ordenando por esta columna, cambiar dirección
 			this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
 		} else {
-			// Nueva columna, establecer dirección por defecto
 			this.sortColumn = column;
 			this.sortDirection = 'desc';
 		}
 	}
 
 	hasSelectedHeaders(): boolean {
-		return this.headers.some(h => h.selected);
+		return this.selectedHeaders.length > 0;
 	}
 
 	getSelectedHeadersCount(): number {
-		return this.headers.filter(h => h.selected).length;
+		return this.selectedHeaders.length;
 	}
 
 	getSelectedHeaderNames(): string[] {
-		return this.headers.filter(h => h.selected).map(h => h.header);
+		return this.selectedHeaders;
 	}
 
-	// Paso 2: seleccionar columnas a mantener
+	toggleHeader(header: string) {
+		const idx = this.selectedHeaders.indexOf(header);
+		if (idx > -1) {
+			this.selectedHeaders.splice(idx, 1);
+		} else {
+			this.selectedHeaders.push(header);
+		}
+	}
+
 	onContinueClick() {
 		const fileId = this.fileStateService.fileId();
-		// Tomar los headers seleccionados
-		const headers = this.headers.filter(h => h.selected).map(h => h.header);
+		const headers = [...this.selectedHeaders];
 		if (!fileId || headers.length === 0) {
 			this.errorMessage.set('Selecciona al menos una columna a mantener');
 			return;
@@ -119,7 +116,6 @@ export class Step2SeparateByComponent implements OnChanges {
 		});
 	}
 
-	// Getter para filtrar headers según el término de búsqueda
 	get filteredHeaders() {
 		let filtered = this.headers;
 		if (this.headerSearchTerm) {

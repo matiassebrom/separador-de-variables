@@ -50,7 +50,9 @@
 					<tbody>
 						<tr *ngFor="let h of filteredHeaders">
 							<td style="text-align: center;">
-								<input type="checkbox" [(ngModel)]="h.selected" />
+								<input type="checkbox"
+									[checked]="selectedHeaders.includes(h.header)"
+									(change)="toggleHeader(h.header)" />
 							</td>
 							<td>{{ h.header }}</td>
 							<td style="text-align: center;">{{ h.total_count }}</td>

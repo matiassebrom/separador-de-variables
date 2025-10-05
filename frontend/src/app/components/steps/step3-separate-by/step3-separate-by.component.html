@@ -1,0 +1,68 @@
+<mat-expansion-panel [expanded]="isStepCurrent" [disabled]="!canAccessStep">
+	<mat-expansion-panel-header>
+		<mat-panel-title>
+			<mat-icon>{{
+				isStepCompleted ? 'check_circle' : isStepCurrent ? 'radio_button_checked' : 'radio_button_unchecked'
+			}}</mat-icon>
+			&nbsp; 3) Elegir 'Variables para separar'
+		</mat-panel-title>
+		<mat-panel-description *ngIf="isStepCompleted"> 
+			Variables seleccionadas: {{ getSelectedHeaderNames().join(', ') }}
+		</mat-panel-description>
+	</mat-expansion-panel-header>
+
+	<div class="step-content">
+		<div *ngIf="fileStateService.hasFile() && fileStateService.headers().length > 0">
+			<div class="search-container">
+				<input type="text" [(ngModel)]="headerSearchTerm" placeholder="Buscar header..." class="search-input" />
+			</div>
+			<div class="table-container">
+				<table class="styled-table">
+					<thead>
+						<tr>
+							<th>Seleccionar</th>
+							<th (click)="onSort('header')" style="cursor:pointer">
+								Header
+								<span *ngIf="sortColumn === 'header'">
+									<span *ngIf="sortDirection === 'desc'">&#8595;</span>
+									<span *ngIf="sortDirection === 'asc'">&#8593;</span>
+								</span>
+							</th>
+							<th (click)="onSort('total_count')" style="cursor:pointer">
+								Cantidad de datos
+								<span *ngIf="sortColumn === 'total_count'">
+									<span *ngIf="sortDirection === 'desc'">&#8595;</span>
+									<span *ngIf="sortDirection === 'asc'">&#8593;</span>
+								</span>
+							</th>
+							<th (click)="onSort('unique_count')" style="cursor:pointer">
+								Cantidad de datos únicos
+								<span *ngIf="sortColumn === 'unique_count'">
+									<span *ngIf="sortDirection === 'desc'">&#8595;</span>
+									<span *ngIf="sortDirection === 'asc'">&#8593;</span>
+								</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let h of filteredHeaders">
+							<td style="text-align: center;">
+								<input type="checkbox"
+									[checked]="selectedHeaders.includes(h.header)"
+									(change)="toggleHeader(h.header)" />
+							</td>
+							<td>{{ h.header }}</td>
+							<td style="text-align: center;">{{ h.total_count }}</td>
+							<td style="text-align: center;">{{ h.unique_count }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="step-actions">
+				<button mat-raised-button color="primary" [disabled]="!hasSelectedHeaders()" (click)="onContinueClick()">
+					Continuar
+				</button>
+			</div>
+		</div>
+	</div>
+</mat-expansion-panel>

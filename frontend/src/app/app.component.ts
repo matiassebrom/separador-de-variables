@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
 // Importar los nuevos componentes
 import { Step1UploadComponent } from './components/steps/step1-upload/step1-upload.component';
 import { Step2SeparateByComponent } from './components/steps/step2-separate-by/step2-separate-by.component';
-import { Step3FiltersComponent } from './components/steps/step3-filters/step3-filters.component';
+import { Step3SeparateByComponent } from './components/steps/step3-separate-by/step3-separate-by.component';
 import { Step4ChooseColumnsComponent } from './components/steps/step4-choose-columns/step4-choose-columns.component';
 import { Step5DownloadComponent } from './components/steps/step5-download/step5-download.component';
 
@@ -38,7 +38,7 @@ import { Step5DownloadComponent } from './components/steps/step5-download/step5-
 		// Nuevos componentes
 		Step1UploadComponent,
 		Step2SeparateByComponent,
-		Step3FiltersComponent,
+		Step3SeparateByComponent,
 		Step4ChooseColumnsComponent,
 		Step5DownloadComponent
 	],

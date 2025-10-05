@@ -20,14 +20,21 @@
 		>
 		</app-step2-separate-by>
 
-		<!-- ==================== PASO 3: CONFIGURAR FILTROS (OPCIONAL) ==================== -->
-		<!--<app-step3-filters
+		<!-- ==================== PASO 3: ELEGIR 'SEPARAR POR' ==================== -->
+		<app-step3-separate-by
 			[isStepCurrent]="isStepCurrent(3)"
 			[canAccessStep]="canAccessStep(3)"
 			[isStepCompleted]="isStepCompleted(3)"
 			(nextStep)="nextStep()"
 		>
-		</app-step3-filters>
+		</app-step3-separate-by>
+				<app-step3-separate-by
+			[isStepCurrent]="true"
+			[canAccessStep]="true"
+			[isStepCompleted]="true"
+			(nextStep)="nextStep()"
+		>
+		</app-step3-separate-by>
 
 		<!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
 		<app-step4-choose-columns

@@ -36,7 +36,7 @@ export class ApiService {
 		return this.http.get(`${this.baseUrl}/get_headers_data/${fileId}`);
 	}
 
-	// ==================== ELEGIR 'DATOS A GUARDAR' ====================
+	// ==================== PASO 2:  ELEGIR 'DATOS A Mantener' ====================
 	setHeadersToKeep(fileId: string, headers: string[]): Observable<string[]> {
 		const body = { headers };
 		return this.http.post<SetHeadersToKeepResponse>(`${this.baseUrl}/set_headers_to_keep/${fileId}`, body).pipe(
@@ -44,7 +44,7 @@ export class ApiService {
 		);
 	}
 
-	// ==================== ELEGIR 'SEPARAR POR' ====================
+	// ==================== PASO 3: ELEGIR 'SEPARAR POR' ====================
 	setHeadersToSplit(fileId: string, headers: string[]): Observable<number> {
 		const body = { headers };
 		return this.http.post<any>(`${this.baseUrl}/set_headers_to_split/${fileId}`, body).pipe(map(r => r.count_headers_to_split));

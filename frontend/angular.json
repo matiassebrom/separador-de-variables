@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"split-excel-frontend": {
+		"separador-de-variables": {
 			"projectType": "application",
 			"schematics": {
 				"@schematics/angular:component": {
@@ -17,7 +17,7 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:application",
 					"options": {
-						"outputPath": "dist/split-excel-frontend",
+						"outputPath": "dist/separador-de-variables",
 						"index": "src/index.html",
 						"browser": "src/main.ts",
 						"polyfills": ["zone.js"],
@@ -66,10 +66,10 @@
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
 						"production": {
-							"buildTarget": "split-excel-frontend:build:production"
+							"buildTarget": "separador-de-variables:build:production"
 						},
 						"development": {
-							"buildTarget": "split-excel-frontend:build:development"
+							"buildTarget": "separador-de-variables:build:development"
 						}
 					},
 					"defaultConfiguration": "development"

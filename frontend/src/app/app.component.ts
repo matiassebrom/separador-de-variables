@@ -16,15 +16,14 @@ import { FormsModule } from '@angular/forms';
 import { Step1UploadComponent } from './components/steps/step1-upload/step1-upload.component';
 import { Step2SeparateByComponent } from './components/steps/step2-separate-by/step2-separate-by.component';
 import { Step3SeparateByComponent } from './components/steps/step3-separate-by/step3-separate-by.component';
-import { Step4ChooseColumnsComponent } from './components/steps/step4-choose-columns/step4-choose-columns.component';
-import { Step5DownloadComponent } from './components/steps/step5-download/step5-download.component';
+import { Step4DownloadComponent } from './components/steps/step4-download/step4-download.component';
 
 @Component({
 	selector: 'app-root',
 	standalone: true,
 	imports: [
 		CommonModule,
-		// RouterOutlet,
+		
 		MatButtonModule,
 		MatExpansionModule,
 		MatFormFieldModule,
@@ -35,12 +34,11 @@ import { Step5DownloadComponent } from './components/steps/step5-download/step5-
 		MatIconModule,
 		MatChipsModule,
 		FormsModule,
-		// Nuevos componentes
+		
 		Step1UploadComponent,
 		Step2SeparateByComponent,
 		Step3SeparateByComponent,
-		Step4ChooseColumnsComponent,
-		Step5DownloadComponent
+		Step4DownloadComponent
 	],
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.scss'

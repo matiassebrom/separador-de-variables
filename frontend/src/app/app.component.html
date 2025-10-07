@@ -28,29 +28,29 @@
 			(nextStep)="nextStep()"
 		>
 		</app-step3-separate-by>
-				<app-step3-separate-by
-			[isStepCurrent]="true"
-			[canAccessStep]="true"
-			[isStepCompleted]="true"
-			(nextStep)="nextStep()"
-		>
-		</app-step3-separate-by>
-
 		<!-- ==================== PASO 4: ELEGIR 'DATOS A GUARDAR' ==================== -->
-		<app-step4-choose-columns
+<!-- 		<app-step4-choose-columns
 			[isStepCurrent]="isStepCurrent(4)"
 			[canAccessStep]="canAccessStep(4)"
 			[isStepCompleted]="isStepCompleted(4)"
 			(nextStep)="nextStep()"
 		>
-		</app-step4-choose-columns>
+		</app-step4-choose-columns> -->
 
 		<!-- ==================== PASO 5: NOMBRE BASE Y DESCARGAR ==================== -->
-		<app-step5-download
+		<app-step4-download
 			[isStepCurrent]="isStepCurrent(5)"
 			[canAccessStep]="canAccessStep(5)"
 			[isStepCompleted]="isStepCompleted(5)"
 			(nextStep)="nextStep()"
-		></app-step5-download> -->
+		></app-step4-download> 
+
+
+		<app-step4-download
+			[isStepCurrent]="true"
+			[canAccessStep]="true"
+			[isStepCompleted]="true"
+			(nextStep)="nextStep()"
+		></app-step4-download>
 	</mat-accordion>
 </div>

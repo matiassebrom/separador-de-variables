@@ -11,9 +11,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
-	selector: 'app-step5-download',
-	templateUrl: './step5-download.component.html',
-	styleUrls: ['./step5-download.component.scss'],
+	selector: 'app-step4-download',
+	templateUrl: './step4-download.component.html',
+	styleUrls: ['./step4-download.component.scss'],
 	standalone: true,
 	imports: [
 		CommonModule,
@@ -26,7 +26,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 		MatExpansionModule
 	]
 })
-export class Step5DownloadComponent {
+export class Step4DownloadComponent {
 	@Input() isStepCurrent: boolean = false;
 	@Input() canAccessStep: boolean = false;
 	@Input() isStepCompleted: boolean = false;

@@ -4,7 +4,7 @@
 			<mat-icon>
 				{{ isStepCompleted ? 'check_circle' : isStepCurrent ? 'radio_button_checked' : 'radio_button_unchecked' }}
 			</mat-icon>
-			&nbsp; 5) Descargar archivos
+			&nbsp; 4) Descargar archivos
 		</mat-panel-title>
 		<mat-panel-description *ngIf="baseName"> Nombre base: {{ baseName }} </mat-panel-description>
 	</mat-expansion-panel-header>
@@ -13,7 +13,7 @@
 		<mat-form-field appearance="outline" class="full-width">
 			<mat-label>Nombre base para los archivos</mat-label>
 			<input matInput [(ngModel)]="baseName" placeholder="baseName" />
-			<mat-hint>Los archivos se nombrarán como: [base] [valor].xlsx</mat-hint>
+			<mat-hint>Los archivos se nombrarán como: [base] [Variable].xlsx</mat-hint>
 		</mat-form-field>
 
 		<!-- 		<div class="files-preview">
